@@ -2,17 +2,27 @@
 
 import Link from "next/link";
 import { useState, useMemo } from "react";
+import {
+  Star,
+  Mail,
+  FileText,
+  Scale,
+  Users,
+  Award,
+} from "lucide-react";
 
 interface Tool {
   title: string;
   slug: string;
   desc: string;
-  keywords: string; // hidden search terms
+  keywords: string;
 }
 
 interface Category {
   name: string;
-  icon: string;
+  icon: React.ReactNode;
+  color: string; // tailwind text color for icon
+  bgColor: string; // tailwind bg color for nav pill
   id: string;
   tools: Tool[];
 }
@@ -20,7 +30,9 @@ interface Category {
 const categories: Category[] = [
   {
     name: "Popular Tools",
-    icon: "🔥",
+    icon: <Star className="w-5 h-5" />,
+    color: "text-blue-600",
+    bgColor: "bg-blue-50 border-blue-200 hover:bg-blue-100",
     id: "popular",
     tools: [
       { title: "Resume / CV Generator", slug: "resume", desc: "Build a professional resume with experience, education & skills. Download as Word.", keywords: "cv curriculum vitae job application" },
@@ -33,7 +45,9 @@ const categories: Category[] = [
   },
   {
     name: "Letters",
-    icon: "✉️",
+    icon: <Mail className="w-5 h-5" />,
+    color: "text-gray-600",
+    bgColor: "bg-gray-50 border-gray-200 hover:bg-gray-100",
     id: "letters",
     tools: [
       { title: "Business Letter", slug: "business-letter", desc: "Write a formal business letter for any professional purpose.", keywords: "formal corporate" },
@@ -54,7 +68,9 @@ const categories: Category[] = [
   },
   {
     name: "Business Documents",
-    icon: "📊",
+    icon: <FileText className="w-5 h-5" />,
+    color: "text-green-600",
+    bgColor: "bg-green-50 border-green-200 hover:bg-green-100",
     id: "business",
     tools: [
       { title: "Receipt Generator", slug: "receipt", desc: "Generate a receipt for any transaction or payment.", keywords: "proof payment transaction" },
@@ -72,7 +88,9 @@ const categories: Category[] = [
   },
   {
     name: "Legal & Agreements",
-    icon: "⚖️",
+    icon: <Scale className="w-5 h-5" />,
+    color: "text-amber-600",
+    bgColor: "bg-amber-50 border-amber-200 hover:bg-amber-100",
     id: "legal",
     tools: [
       { title: "Employment Contract", slug: "employment-contract", desc: "Create an employment contract with terms & conditions.", keywords: "hire job work agreement" },
@@ -90,7 +108,9 @@ const categories: Category[] = [
   },
   {
     name: "HR & Employment",
-    icon: "👥",
+    icon: <Users className="w-5 h-5" />,
+    color: "text-purple-600",
+    bgColor: "bg-purple-50 border-purple-200 hover:bg-purple-100",
     id: "hr",
     tools: [
       { title: "Pay Stub Generator", slug: "pay-stub", desc: "Generate a professional pay stub with earnings & deductions.", keywords: "payslip salary wages paycheck" },
@@ -104,7 +124,9 @@ const categories: Category[] = [
   },
   {
     name: "Certificates",
-    icon: "🏆",
+    icon: <Award className="w-5 h-5" />,
+    color: "text-yellow-600",
+    bgColor: "bg-yellow-50 border-yellow-200 hover:bg-yellow-100",
     id: "certificates",
     tools: [
       { title: "Certificate of Completion", slug: "certificate-of-completion", desc: "Create a certificate for completing a course or program.", keywords: "course training achievement" },
@@ -202,10 +224,10 @@ export default function Home() {
             <a
               key={cat.id}
               href={`#${cat.id}`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 transition-colors text-gray-700"
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border transition-colors ${cat.bgColor}`}
             >
-              <span>{cat.icon}</span>
-              {cat.name}
+              <span className={cat.color}>{cat.icon}</span>
+              <span className="text-gray-700">{cat.name}</span>
             </a>
           ))}
         </div>
@@ -234,7 +256,7 @@ export default function Home() {
         {filteredCategories.map((category) => (
           <section key={category.id} id={category.id}>
             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span>{category.icon}</span>
+              <span className={category.color}>{category.icon}</span>
               {category.name}
               <span className="text-sm font-normal text-gray-400">
                 ({category.tools.length})
