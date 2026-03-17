@@ -1,4 +1,19 @@
-import { Document, Packer, Paragraph, TextRun } from "docx";
+import { Paragraph, TextRun, AlignmentType, BorderStyle } from "docx";
+import {
+  FONT,
+  BODY_SIZE,
+  NAME_SIZE,
+  SMALL_SIZE,
+  SPACING,
+  SPACING_TIGHT,
+  COLOR_DARK,
+  COLOR_GRAY,
+  COLOR_LIGHT,
+  formatDate,
+  todayFormatted,
+  spacer,
+  buildLetterDocument,
+} from "./letter-utils";
 
 export interface ProjectBriefData {
   projectName: string;
@@ -17,89 +32,291 @@ export interface ProjectBriefData {
   risksConstraints: string;
 }
 
-export async function generateProjectBrief(data: ProjectBriefData): Promise<Blob> {
+// ── Helpers ──
+
+const HEADING_SIZE = 26; // 13pt
+const TITLE_SIZE = 36; // 18pt
+const META_LABEL_SIZE = 20; // 10pt
+
+function numberedSectionHeading(num: number, text: string): Paragraph {
+  return new Paragraph({
+    spacing: { before: 360, after: 120 },
+    border: {
+      bottom: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC", space: 4 },
+    },
+    children: [
+      new TextRun({
+        text: `${num}.  `,
+        bold: true,
+        size: HEADING_SIZE,
+        font: FONT,
+        color: COLOR_GRAY,
+      }),
+      new TextRun({
+        text,
+        bold: true,
+        size: HEADING_SIZE,
+        font: FONT,
+        color: COLOR_DARK,
+      }),
+    ],
+  });
+}
+
+function bodyParagraph(text: string): Paragraph {
+  return new Paragraph({
+    spacing: SPACING,
+    children: [
+      new TextRun({
+        text,
+        size: BODY_SIZE,
+        font: FONT,
+        color: "333333",
+      }),
+    ],
+  });
+}
+
+function multiLineParagraphs(text: string): Paragraph[] {
+  return text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => bodyParagraph(line));
+}
+
+function bulletItem(text: string): Paragraph {
+  return new Paragraph({
+    spacing: { after: 80 },
+    indent: { left: 360 },
+    children: [
+      new TextRun({
+        text: "\u2022  ",
+        size: BODY_SIZE,
+        font: FONT,
+        color: COLOR_GRAY,
+      }),
+      new TextRun({
+        text,
+        size: BODY_SIZE,
+        font: FONT,
+        color: "333333",
+      }),
+    ],
+  });
+}
+
+function buildBulletList(text: string): Paragraph[] {
+  return text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => bulletItem(line));
+}
+
+function metaRow(label: string, value: string): Paragraph {
+  return new Paragraph({
+    spacing: SPACING_TIGHT,
+    children: [
+      new TextRun({
+        text: `${label}:  `,
+        bold: true,
+        size: BODY_SIZE,
+        font: FONT,
+        color: COLOR_GRAY,
+      }),
+      new TextRun({
+        text: value,
+        size: BODY_SIZE,
+        font: FONT,
+        color: COLOR_DARK,
+      }),
+    ],
+  });
+}
+
+// ── Generator ──
+
+export async function generateProjectBrief(
+  data: ProjectBriefData
+): Promise<Blob> {
   const formattedDate = data.date
-    ? new Date(data.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
-    : new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+    ? formatDate(data.date)
+    : todayFormatted();
 
-  const paragraphs: Paragraph[] = [
-    new Paragraph({ children: [new TextRun({ text: "PROJECT BRIEF", bold: true, size: 32 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
-    new Paragraph({ children: [new TextRun({ text: data.projectName, bold: true, size: 28 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
-    new Paragraph({ children: [new TextRun({ text: `Project Owner: ${data.projectOwner}`, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: `Date: ${formattedDate}`, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
+  const paragraphs: Paragraph[] = [];
 
-    // Background
-    new Paragraph({ children: [new TextRun({ text: "1. Background / Context", bold: true, size: 24 })] }),
-    new Paragraph({ children: [new TextRun({ text: data.backgroundContext, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
+  // ── Document header ──
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 40 },
+      children: [
+        new TextRun({
+          text: "PROJECT BRIEF",
+          size: META_LABEL_SIZE,
+          font: FONT,
+          color: COLOR_LIGHT,
+          allCaps: true,
+        }),
+      ],
+    })
+  );
 
-    // Problem Statement
-    new Paragraph({ children: [new TextRun({ text: "2. Problem Statement", bold: true, size: 24 })] }),
-    new Paragraph({ children: [new TextRun({ text: data.problemStatement, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
+  // Project name prominently
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 80 },
+      children: [
+        new TextRun({
+          text: data.projectName,
+          bold: true,
+          size: TITLE_SIZE,
+          font: FONT,
+          color: COLOR_DARK,
+        }),
+      ],
+    })
+  );
 
-    // Objectives
-    new Paragraph({ children: [new TextRun({ text: "3. Project Objectives", bold: true, size: 24 })] }),
-    new Paragraph({ children: [new TextRun({ text: data.projectObjectives, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
-  ];
+  // Accent divider
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 200 },
+      border: {
+        bottom: { style: BorderStyle.SINGLE, size: 2, color: "2B579A", space: 6 },
+      },
+      children: [],
+    })
+  );
 
-  let sectionNum = 4;
-
-  if (data.targetAudience) {
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: `${sectionNum}. Target Audience`, bold: true, size: 24 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.targetAudience, size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
-    sectionNum++;
-  }
-
-  // Scope
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: `${sectionNum}. Scope`, bold: true, size: 24 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.scope, size: 22 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
-  sectionNum++;
-
-  // Key Deliverables
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: `${sectionNum}. Key Deliverables`, bold: true, size: 24 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.keyDeliverables, size: 22 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
-  sectionNum++;
-
-  // Timeline
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: `${sectionNum}. Timeline`, bold: true, size: 24 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.timeline, size: 22 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
-  sectionNum++;
-
-  if (data.budget) {
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: `${sectionNum}. Budget`, bold: true, size: 24 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.budget, size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
-    sectionNum++;
-  }
-
-  // Success Metrics
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: `${sectionNum}. Success Metrics`, bold: true, size: 24 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.successMetrics, size: 22 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
-  sectionNum++;
+  // ── Metadata block ──
+  paragraphs.push(metaRow("Project Owner", data.projectOwner));
+  paragraphs.push(metaRow("Date", formattedDate));
 
   if (data.stakeholders) {
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: `${sectionNum}. Stakeholders`, bold: true, size: 24 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.stakeholders, size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
-    sectionNum++;
+    paragraphs.push(metaRow("Key Stakeholders", data.stakeholders));
   }
 
+  paragraphs.push(spacer());
+
+  // ── Numbered sections ──
+  let sectionNum = 1;
+
+  // 1. Executive Summary (derived from problem statement)
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Executive Summary"));
+  paragraphs.push(
+    bodyParagraph(
+      `This project brief outlines the ${data.projectName} initiative. ${data.problemStatement}`
+    )
+  );
+
+  // 2. Background / Context
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Background & Context"));
+  paragraphs.push(...multiLineParagraphs(data.backgroundContext));
+
+  // 3. Project Objectives
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Project Objectives"));
+  // Render as bullets if multi-line, otherwise as a paragraph
+  const objectiveLines = data.projectObjectives
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+  if (objectiveLines.length > 1) {
+    paragraphs.push(...objectiveLines.map((line) => bulletItem(line)));
+  } else {
+    paragraphs.push(bodyParagraph(data.projectObjectives));
+  }
+
+  // 4. Target Audience (optional)
+  if (data.targetAudience) {
+    paragraphs.push(numberedSectionHeading(sectionNum++, "Target Audience"));
+    paragraphs.push(...multiLineParagraphs(data.targetAudience));
+  }
+
+  // 5. Scope
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Scope"));
+  paragraphs.push(...multiLineParagraphs(data.scope));
+
+  // 6. Key Deliverables
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Key Deliverables"));
+  paragraphs.push(...buildBulletList(data.keyDeliverables));
+
+  // 7. Timeline & Milestones
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Timeline & Milestones"));
+  paragraphs.push(...multiLineParagraphs(data.timeline));
+
+  // 8. Budget (optional)
+  if (data.budget) {
+    paragraphs.push(numberedSectionHeading(sectionNum++, "Budget"));
+    paragraphs.push(...multiLineParagraphs(data.budget));
+  }
+
+  // 9. Success Criteria
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Success Criteria"));
+  const successLines = data.successMetrics
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+  if (successLines.length > 1) {
+    paragraphs.push(...successLines.map((line) => bulletItem(line)));
+  } else {
+    paragraphs.push(bodyParagraph(data.successMetrics));
+  }
+
+  // 10. Risks & Constraints (optional)
   if (data.risksConstraints) {
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: `${sectionNum}. Risks & Constraints`, bold: true, size: 24 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.risksConstraints, size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
+    paragraphs.push(
+      numberedSectionHeading(sectionNum++, "Risks & Constraints")
+    );
+    const riskLines = data.risksConstraints
+      .split("\n")
+      .map((l) => l.trim())
+      .filter(Boolean);
+    if (riskLines.length > 1) {
+      paragraphs.push(...riskLines.map((line) => bulletItem(line)));
+    } else {
+      paragraphs.push(bodyParagraph(data.risksConstraints));
+    }
   }
 
-  const doc = new Document({ sections: [{ children: paragraphs }] });
-  return await Packer.toBlob(doc);
+  // ── Document footer ──
+  paragraphs.push(spacer());
+  paragraphs.push(
+    new Paragraph({
+      spacing: { before: 200, after: 120 },
+      border: {
+        top: { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD", space: 6 },
+      },
+      children: [
+        new TextRun({
+          text: "Document Status:  ",
+          bold: true,
+          size: SMALL_SIZE,
+          font: FONT,
+          color: COLOR_LIGHT,
+        }),
+        new TextRun({
+          text: "Draft",
+          size: SMALL_SIZE,
+          font: FONT,
+          color: COLOR_LIGHT,
+        }),
+      ],
+    })
+  );
+  paragraphs.push(
+    new Paragraph({
+      spacing: SPACING_TIGHT,
+      children: [
+        new TextRun({
+          text: `Prepared by ${data.projectOwner}  |  ${formattedDate}`,
+          size: SMALL_SIZE,
+          font: FONT,
+          color: COLOR_LIGHT,
+        }),
+      ],
+    })
+  );
+
+  return await buildLetterDocument(paragraphs);
 }

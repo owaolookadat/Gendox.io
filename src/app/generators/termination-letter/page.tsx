@@ -14,8 +14,10 @@ const reasons = [
   "Performance",
   "Misconduct",
   "Redundancy",
-  "End of Contract",
   "Restructuring",
+  "End of Contract",
+  "Probation Failure",
+  "Other",
 ];
 
 function slugify(text: string): string {

@@ -1,4 +1,19 @@
-import { Document, Packer, Paragraph, TextRun } from "docx";
+import { Paragraph, TextRun, AlignmentType, BorderStyle } from "docx";
+import {
+  FONT,
+  BODY_SIZE,
+  NAME_SIZE,
+  SMALL_SIZE,
+  SPACING,
+  SPACING_TIGHT,
+  COLOR_DARK,
+  COLOR_GRAY,
+  COLOR_LIGHT,
+  todayFormatted,
+  formatDate,
+  spacer,
+  buildLetterDocument,
+} from "./letter-utils";
 
 export interface JobDescriptionData {
   companyName: string;
@@ -16,78 +31,232 @@ export interface JobDescriptionData {
   howToApply: string;
 }
 
-function buildBulletList(text: string, size: number): Paragraph[] {
+// ── Helpers ──
+
+const HEADING_SIZE = 26; // 13pt
+const TITLE_SIZE = 36; // 18pt
+const META_LABEL_SIZE = 20; // 10pt
+
+function sectionHeading(text: string): Paragraph {
+  return new Paragraph({
+    spacing: { before: 360, after: 120 },
+    border: {
+      bottom: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC", space: 4 },
+    },
+    children: [
+      new TextRun({
+        text: text.toUpperCase(),
+        bold: true,
+        size: HEADING_SIZE,
+        font: FONT,
+        color: COLOR_DARK,
+      }),
+    ],
+  });
+}
+
+function bodyParagraph(text: string): Paragraph {
+  return new Paragraph({
+    spacing: SPACING,
+    children: [
+      new TextRun({
+        text,
+        size: BODY_SIZE,
+        font: FONT,
+        color: "333333",
+      }),
+    ],
+  });
+}
+
+function bulletItem(text: string): Paragraph {
+  return new Paragraph({
+    spacing: { after: 80 },
+    indent: { left: 360 },
+    children: [
+      new TextRun({
+        text: "\u2022  ",
+        size: BODY_SIZE,
+        font: FONT,
+        color: COLOR_GRAY,
+      }),
+      new TextRun({
+        text,
+        size: BODY_SIZE,
+        font: FONT,
+        color: "333333",
+      }),
+    ],
+  });
+}
+
+function buildBulletList(text: string): Paragraph[] {
   return text
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean)
-    .map(
-      (line) =>
-        new Paragraph({
-          children: [new TextRun({ text: `  •  ${line}`, size })],
-        })
-    );
+    .map((line) => bulletItem(line));
 }
 
-export async function generateJobDescription(data: JobDescriptionData): Promise<Blob> {
-  const paragraphs: Paragraph[] = [
-    new Paragraph({ children: [new TextRun({ text: data.companyName, bold: true, size: 28 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
-    new Paragraph({ children: [new TextRun({ text: "JOB DESCRIPTION", bold: true, size: 26 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
-    new Paragraph({ children: [new TextRun({ text: `Job Title: ${data.jobTitle}`, bold: true, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: `Department: ${data.department}`, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: `Location: ${data.location}`, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: `Employment Type: ${data.employmentType}`, size: 22 })] }),
-  ];
+function metaRow(label: string, value: string): Paragraph {
+  return new Paragraph({
+    spacing: SPACING_TIGHT,
+    children: [
+      new TextRun({
+        text: `${label}:  `,
+        bold: true,
+        size: BODY_SIZE,
+        font: FONT,
+        color: COLOR_GRAY,
+      }),
+      new TextRun({
+        text: value,
+        size: BODY_SIZE,
+        font: FONT,
+        color: COLOR_DARK,
+      }),
+    ],
+  });
+}
+
+// ── Generator ──
+
+export async function generateJobDescription(
+  data: JobDescriptionData
+): Promise<Blob> {
+  const paragraphs: Paragraph[] = [];
+
+  // ── Company header ──
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 80 },
+      children: [
+        new TextRun({
+          text: data.companyName.toUpperCase(),
+          bold: true,
+          size: NAME_SIZE,
+          font: FONT,
+          color: COLOR_DARK,
+        }),
+      ],
+    })
+  );
+
+  // Document type label
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 40 },
+      children: [
+        new TextRun({
+          text: "JOB DESCRIPTION",
+          size: META_LABEL_SIZE,
+          font: FONT,
+          color: COLOR_LIGHT,
+          allCaps: true,
+        }),
+      ],
+    })
+  );
+
+  // Divider
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 240 },
+      border: {
+        bottom: { style: BorderStyle.SINGLE, size: 2, color: "2B579A", space: 6 },
+      },
+      children: [],
+    })
+  );
+
+  // ── Job title prominently ──
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 200 },
+      children: [
+        new TextRun({
+          text: data.jobTitle,
+          bold: true,
+          size: TITLE_SIZE,
+          font: FONT,
+          color: COLOR_DARK,
+        }),
+      ],
+    })
+  );
+
+  // ── Metadata block ──
+  paragraphs.push(metaRow("Department", data.department));
+  paragraphs.push(metaRow("Location", data.location));
+  paragraphs.push(metaRow("Employment Type", data.employmentType));
 
   if (data.salaryRange) {
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: `Salary Range: ${data.salaryRange}`, size: 22 })] }));
+    paragraphs.push(metaRow("Salary Range", data.salaryRange));
   }
 
   if (data.applicationDeadline) {
-    const formatted = new Date(data.applicationDeadline).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: `Application Deadline: ${formatted}`, size: 22 })] }));
+    paragraphs.push(
+      metaRow("Application Deadline", formatDate(data.applicationDeadline))
+    );
   }
 
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
+  paragraphs.push(spacer());
 
-  // Job Summary
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "Job Summary", bold: true, size: 24 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.jobSummary, size: 22 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
+  // ── About the Role ──
+  paragraphs.push(sectionHeading("About the Role"));
+  paragraphs.push(bodyParagraph(data.jobSummary));
 
-  // Key Responsibilities
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "Key Responsibilities", bold: true, size: 24 })] }));
-  paragraphs.push(...buildBulletList(data.keyResponsibilities, 22));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
+  // ── Key Responsibilities ──
+  paragraphs.push(sectionHeading("Key Responsibilities"));
+  paragraphs.push(...buildBulletList(data.keyResponsibilities));
 
-  // Required Qualifications
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "Required Qualifications", bold: true, size: 24 })] }));
-  paragraphs.push(...buildBulletList(data.requiredQualifications, 22));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
+  // ── Required Qualifications ──
+  paragraphs.push(sectionHeading("Required Qualifications"));
+  paragraphs.push(...buildBulletList(data.requiredQualifications));
 
-  // Preferred Qualifications
+  // ── Preferred Qualifications ──
   if (data.preferredQualifications) {
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "Preferred Qualifications", bold: true, size: 24 })] }));
-    paragraphs.push(...buildBulletList(data.preferredQualifications, 22));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
+    paragraphs.push(sectionHeading("Nice-to-Have Qualifications"));
+    paragraphs.push(...buildBulletList(data.preferredQualifications));
   }
 
-  // Benefits
+  // ── Benefits ──
   if (data.benefits) {
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "Benefits", bold: true, size: 24 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.benefits, size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
+    paragraphs.push(sectionHeading("What We Offer"));
+    const benefitLines = data.benefits
+      .split("\n")
+      .map((l) => l.trim())
+      .filter(Boolean);
+    if (benefitLines.length > 1) {
+      paragraphs.push(...benefitLines.map((line) => bulletItem(line)));
+    } else {
+      paragraphs.push(bodyParagraph(data.benefits));
+    }
   }
 
-  // How to Apply
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "How to Apply", bold: true, size: 24 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.howToApply, size: 22 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
+  // ── How to Apply ──
+  paragraphs.push(sectionHeading("How to Apply"));
+  paragraphs.push(bodyParagraph(data.howToApply));
 
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: `${data.companyName} is an equal opportunity employer.`, italics: true, size: 20, color: "666666" })] }));
+  // ── Equal Opportunity Statement ──
+  paragraphs.push(spacer());
+  paragraphs.push(
+    new Paragraph({
+      spacing: { before: 200, after: 0 },
+      border: {
+        top: { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD", space: 6 },
+      },
+      children: [
+        new TextRun({
+          text: `${data.companyName} is an equal opportunity employer. We celebrate diversity and are committed to creating an inclusive environment for all employees. All qualified applicants will receive consideration for employment without regard to race, colour, religion, gender, sexual orientation, national origin, disability, or veteran status.`,
+          italics: true,
+          size: SMALL_SIZE,
+          font: FONT,
+          color: COLOR_LIGHT,
+        }),
+      ],
+    })
+  );
 
-  const doc = new Document({ sections: [{ children: paragraphs }] });
-  return await Packer.toBlob(doc);
+  return await buildLetterDocument(paragraphs);
 }

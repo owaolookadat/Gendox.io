@@ -1,4 +1,19 @@
-import { Document, Packer, Paragraph, TextRun } from "docx";
+import { Paragraph, TextRun, AlignmentType, BorderStyle } from "docx";
+import {
+  FONT,
+  BODY_SIZE,
+  NAME_SIZE,
+  SMALL_SIZE,
+  SPACING,
+  SPACING_TIGHT,
+  SPACING_NONE,
+  COLOR_DARK,
+  COLOR_GRAY,
+  COLOR_LIGHT,
+  todayFormatted,
+  spacer,
+  buildLetterDocument,
+} from "./letter-utils";
 
 export interface ScopeOfWorkData {
   projectTitle: string;
@@ -17,104 +32,390 @@ export interface ScopeOfWorkData {
   includeSignatures: boolean;
 }
 
-function buildBulletList(text: string, size: number): Paragraph[] {
+// ── Helpers ──
+
+const HEADING_SIZE = 26; // 13pt
+const TITLE_SIZE = 36; // 18pt
+const META_LABEL_SIZE = 20; // 10pt
+
+function numberedSectionHeading(num: number, text: string): Paragraph {
+  return new Paragraph({
+    spacing: { before: 360, after: 120 },
+    border: {
+      bottom: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC", space: 4 },
+    },
+    children: [
+      new TextRun({
+        text: `${num}.  `,
+        bold: true,
+        size: HEADING_SIZE,
+        font: FONT,
+        color: COLOR_GRAY,
+      }),
+      new TextRun({
+        text: text.toUpperCase(),
+        bold: true,
+        size: HEADING_SIZE,
+        font: FONT,
+        color: COLOR_DARK,
+      }),
+    ],
+  });
+}
+
+function bodyParagraph(text: string): Paragraph {
+  return new Paragraph({
+    spacing: SPACING,
+    children: [
+      new TextRun({
+        text,
+        size: BODY_SIZE,
+        font: FONT,
+        color: "333333",
+      }),
+    ],
+  });
+}
+
+function multiLineParagraphs(text: string): Paragraph[] {
   return text
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean)
-    .map(
-      (line) =>
-        new Paragraph({
-          children: [new TextRun({ text: `  •  ${line}`, size })],
-        })
-    );
+    .map((line) => bodyParagraph(line));
 }
 
-export async function generateScopeOfWork(data: ScopeOfWorkData): Promise<Blob> {
-  const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+function bulletItem(text: string): Paragraph {
+  return new Paragraph({
+    spacing: { after: 80 },
+    indent: { left: 360 },
+    children: [
+      new TextRun({
+        text: "\u2022  ",
+        size: BODY_SIZE,
+        font: FONT,
+        color: COLOR_GRAY,
+      }),
+      new TextRun({
+        text,
+        size: BODY_SIZE,
+        font: FONT,
+        color: "333333",
+      }),
+    ],
+  });
+}
 
-  const paragraphs: Paragraph[] = [
-    new Paragraph({ children: [new TextRun({ text: "SCOPE OF WORK", bold: true, size: 32 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
-    new Paragraph({ children: [new TextRun({ text: `Project: ${data.projectTitle}`, bold: true, size: 26 })] }),
-    new Paragraph({ children: [new TextRun({ text: `Date: ${today}`, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
+function buildBulletList(text: string): Paragraph[] {
+  return text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => bulletItem(line));
+}
 
-    // Parties
-    new Paragraph({ children: [new TextRun({ text: "Parties", bold: true, size: 24 })] }),
-    new Paragraph({ children: [new TextRun({ text: `Client: ${data.clientName}, ${data.clientCompany}`, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: `Provider: ${data.providerName}, ${data.providerCompany}`, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
-
-    // Project Description
-    new Paragraph({ children: [new TextRun({ text: "1. Project Description", bold: true, size: 24 })] }),
-    new Paragraph({ children: [new TextRun({ text: data.projectDescription, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
-
-    // Objectives
-    new Paragraph({ children: [new TextRun({ text: "2. Objectives", bold: true, size: 24 })] }),
-    new Paragraph({ children: [new TextRun({ text: data.objectives, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
-
-    // Deliverables
-    new Paragraph({ children: [new TextRun({ text: "3. Deliverables", bold: true, size: 24 })] }),
-    ...buildBulletList(data.deliverables, 22),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
-
-    // Timeline
-    new Paragraph({ children: [new TextRun({ text: "4. Timeline & Milestones", bold: true, size: 24 })] }),
-    new Paragraph({ children: [new TextRun({ text: data.timeline, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
-
-    // Budget
-    new Paragraph({ children: [new TextRun({ text: "5. Budget & Payment Terms", bold: true, size: 24 })] }),
-    new Paragraph({ children: [new TextRun({ text: data.budgetPaymentTerms, size: 22 })] }),
-    new Paragraph({ children: [new TextRun({ text: "" })] }),
+function partyBlock(role: string, name: string, company: string): Paragraph[] {
+  return [
+    new Paragraph({
+      spacing: SPACING_TIGHT,
+      children: [
+        new TextRun({
+          text: `${role}:`,
+          bold: true,
+          size: SMALL_SIZE,
+          font: FONT,
+          color: COLOR_LIGHT,
+          allCaps: true,
+        }),
+      ],
+    }),
+    new Paragraph({
+      spacing: SPACING_TIGHT,
+      children: [
+        new TextRun({
+          text: name,
+          bold: true,
+          size: BODY_SIZE,
+          font: FONT,
+          color: COLOR_DARK,
+        }),
+      ],
+    }),
+    new Paragraph({
+      spacing: { after: 160 },
+      children: [
+        new TextRun({
+          text: company,
+          size: BODY_SIZE,
+          font: FONT,
+          color: COLOR_GRAY,
+        }),
+      ],
+    }),
   ];
+}
 
-  let sectionNum = 6;
+function signatureBlock(role: string, name: string, company: string): Paragraph[] {
+  return [
+    new Paragraph({
+      spacing: { before: 80, after: 40 },
+      children: [
+        new TextRun({
+          text: `${role}:`,
+          bold: true,
+          size: BODY_SIZE,
+          font: FONT,
+          color: COLOR_DARK,
+        }),
+      ],
+    }),
+    spacer(),
+    new Paragraph({
+      spacing: SPACING_TIGHT,
+      border: {
+        bottom: { style: BorderStyle.SINGLE, size: 1, color: "999999", space: 2 },
+      },
+      children: [
+        new TextRun({
+          text: "                                                            ",
+          size: BODY_SIZE,
+          font: FONT,
+        }),
+      ],
+    }),
+    new Paragraph({
+      spacing: SPACING_TIGHT,
+      children: [
+        new TextRun({
+          text: "Signature",
+          size: SMALL_SIZE,
+          font: FONT,
+          color: COLOR_LIGHT,
+        }),
+      ],
+    }),
+    spacer(),
+    new Paragraph({
+      spacing: SPACING_TIGHT,
+      children: [
+        new TextRun({
+          text: "Name:  ",
+          size: BODY_SIZE,
+          font: FONT,
+          color: COLOR_GRAY,
+        }),
+        new TextRun({
+          text: name,
+          size: BODY_SIZE,
+          font: FONT,
+          color: COLOR_DARK,
+        }),
+      ],
+    }),
+    new Paragraph({
+      spacing: SPACING_TIGHT,
+      children: [
+        new TextRun({
+          text: "Company:  ",
+          size: BODY_SIZE,
+          font: FONT,
+          color: COLOR_GRAY,
+        }),
+        new TextRun({
+          text: company,
+          size: BODY_SIZE,
+          font: FONT,
+          color: COLOR_DARK,
+        }),
+      ],
+    }),
+    new Paragraph({
+      spacing: { after: 320 },
+      children: [
+        new TextRun({
+          text: "Date:  ____________________________",
+          size: BODY_SIZE,
+          font: FONT,
+          color: COLOR_GRAY,
+        }),
+      ],
+    }),
+  ];
+}
 
+// ── Generator ──
+
+export async function generateScopeOfWork(
+  data: ScopeOfWorkData
+): Promise<Blob> {
+  const today = todayFormatted();
+  const paragraphs: Paragraph[] = [];
+
+  // ── Document header ──
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 40 },
+      children: [
+        new TextRun({
+          text: "SCOPE OF WORK",
+          size: META_LABEL_SIZE,
+          font: FONT,
+          color: COLOR_LIGHT,
+          allCaps: true,
+        }),
+      ],
+    })
+  );
+
+  // Project title prominently
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 80 },
+      children: [
+        new TextRun({
+          text: data.projectTitle,
+          bold: true,
+          size: TITLE_SIZE,
+          font: FONT,
+          color: COLOR_DARK,
+        }),
+      ],
+    })
+  );
+
+  // Date
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 40 },
+      children: [
+        new TextRun({
+          text: `Date: ${today}`,
+          size: SMALL_SIZE,
+          font: FONT,
+          color: COLOR_LIGHT,
+        }),
+      ],
+    })
+  );
+
+  // Accent divider
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 280 },
+      border: {
+        bottom: { style: BorderStyle.SINGLE, size: 2, color: "2B579A", space: 6 },
+      },
+      children: [],
+    })
+  );
+
+  // ── Parties ──
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 160 },
+      children: [
+        new TextRun({
+          text: "PARTIES",
+          bold: true,
+          size: HEADING_SIZE,
+          font: FONT,
+          color: COLOR_DARK,
+        }),
+      ],
+    })
+  );
+
+  paragraphs.push(...partyBlock("Provider", data.providerName, data.providerCompany));
+  paragraphs.push(...partyBlock("Client", data.clientName, data.clientCompany));
+
+  // ── Numbered sections ──
+  let sectionNum = 1;
+
+  // 1. Project Description
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Project Description"));
+  paragraphs.push(...multiLineParagraphs(data.projectDescription));
+
+  // 2. Objectives
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Objectives"));
+  paragraphs.push(...multiLineParagraphs(data.objectives));
+
+  // 3. Deliverables
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Deliverables"));
+  paragraphs.push(...buildBulletList(data.deliverables));
+
+  // 4. Timeline & Milestones
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Timeline & Milestones"));
+  paragraphs.push(...multiLineParagraphs(data.timeline));
+
+  // 5. Budget & Payment Terms
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Budget & Payment Terms"));
+  paragraphs.push(...multiLineParagraphs(data.budgetPaymentTerms));
+
+  // 6. Assumptions & Dependencies (optional)
   if (data.assumptions) {
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: `${sectionNum}. Assumptions`, bold: true, size: 24 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.assumptions, size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
-    sectionNum++;
+    paragraphs.push(
+      numberedSectionHeading(sectionNum++, "Assumptions & Dependencies")
+    );
+    paragraphs.push(...multiLineParagraphs(data.assumptions));
   }
 
+  // 7. Exclusions (optional)
   if (data.exclusions) {
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: `${sectionNum}. Exclusions`, bold: true, size: 24 })] }));
-    paragraphs.push(...buildBulletList(data.exclusions, 22));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
-    sectionNum++;
+    paragraphs.push(numberedSectionHeading(sectionNum++, "Exclusions"));
+    paragraphs.push(...buildBulletList(data.exclusions));
   }
 
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: `${sectionNum}. Acceptance Criteria`, bold: true, size: 24 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: data.acceptanceCriteria, size: 22 })] }));
-  paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
+  // 8. Acceptance Criteria
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Acceptance Criteria"));
+  paragraphs.push(...multiLineParagraphs(data.acceptanceCriteria));
 
+  // 9. Change Management
+  paragraphs.push(numberedSectionHeading(sectionNum++, "Change Management"));
+  paragraphs.push(
+    bodyParagraph(
+      "Any changes to the scope, deliverables, timeline, or budget outlined in this document must be submitted in writing and agreed upon by both parties before implementation. Changes may impact the project timeline and budget, and any such impacts will be communicated and documented in a formal change order."
+    )
+  );
+
+  // ── Signature blocks ──
   if (data.includeSignatures) {
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "AGREED AND ACCEPTED", bold: true, size: 24 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
+    paragraphs.push(spacer());
+    paragraphs.push(
+      new Paragraph({
+        spacing: { before: 360, after: 200 },
+        border: {
+          bottom: {
+            style: BorderStyle.SINGLE,
+            size: 1,
+            color: "CCCCCC",
+            space: 4,
+          },
+        },
+        children: [
+          new TextRun({
+            text: "AGREED AND ACCEPTED",
+            bold: true,
+            size: HEADING_SIZE,
+            font: FONT,
+            color: COLOR_DARK,
+          }),
+        ],
+      })
+    );
 
-    // Client signature
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "Client:", bold: true, size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "Signature: ___________________________", size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: `Name: ${data.clientName}`, size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: `Company: ${data.clientCompany}`, size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "Date: ___________________________", size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
+    paragraphs.push(
+      bodyParagraph(
+        "By signing below, both parties acknowledge and agree to the terms and conditions set forth in this Scope of Work."
+      )
+    );
 
-    // Provider signature
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "Provider:", bold: true, size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "" })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "Signature: ___________________________", size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: `Name: ${data.providerName}`, size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: `Company: ${data.providerCompany}`, size: 22 })] }));
-    paragraphs.push(new Paragraph({ children: [new TextRun({ text: "Date: ___________________________", size: 22 })] }));
+    paragraphs.push(
+      ...signatureBlock("Client", data.clientName, data.clientCompany)
+    );
+    paragraphs.push(
+      ...signatureBlock("Provider", data.providerName, data.providerCompany)
+    );
   }
 
-  const doc = new Document({ sections: [{ children: paragraphs }] });
-  return await Packer.toBlob(doc);
+  return await buildLetterDocument(paragraphs);
 }
