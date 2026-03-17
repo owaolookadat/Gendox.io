@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateThankYouLetter,
@@ -26,6 +27,8 @@ function slugify(text: string): string {
 }
 
 export default function ThankYouLetterPage() {
+  const seoData = getToolSeoContent("thank-you-letter");
+  const relatedTools = getRelatedTools("thank-you-letter");
   const [yourName, setYourName] = useState("");
   const [recipientName, setRecipientName] = useState("");
   const [recipientTitle, setRecipientTitle] = useState("");
@@ -62,6 +65,10 @@ export default function ThankYouLetterPage() {
       title="Thank You Letter Generator"
       description="Generate a professional thank you letter in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div>

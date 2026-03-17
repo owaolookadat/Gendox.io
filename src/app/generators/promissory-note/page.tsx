@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generatePromissoryNote,
@@ -24,6 +25,8 @@ const currencyOptions = [
 ];
 
 export default function PromissoryNotePage() {
+  const seoData = getToolSeoContent("promissory-note");
+  const relatedTools = getRelatedTools("promissory-note");
   const [formData, setFormData] = useState<PromissoryNoteData>({
     borrowerName: "",
     borrowerAddress: "",
@@ -79,6 +82,10 @@ export default function PromissoryNotePage() {
       title="Promissory Note Generator"
       description="Create a legally formatted promissory note in seconds. Free online tool, download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

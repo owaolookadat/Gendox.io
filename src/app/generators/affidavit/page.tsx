@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateAffidavit,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function AffidavitPage() {
+  const seoData = getToolSeoContent("affidavit");
+  const relatedTools = getRelatedTools("affidavit");
   const [formData, setFormData] = useState<AffidavitData>({
     affiantName: "",
     affiantAddress: "",
@@ -63,6 +66,10 @@ export default function AffidavitPage() {
       title="Affidavit Generator"
       description="Create a formal affidavit with sworn statement in seconds. Free online tool, download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

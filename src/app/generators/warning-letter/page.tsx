@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateWarningLetter,
@@ -23,6 +24,8 @@ function slugify(text: string): string {
 }
 
 export default function WarningLetterPage() {
+  const seoData = getToolSeoContent("warning-letter");
+  const relatedTools = getRelatedTools("warning-letter");
   const [companyName, setCompanyName] = useState("");
   const [managerName, setManagerName] = useState("");
   const [managerTitle, setManagerTitle] = useState("");
@@ -79,6 +82,10 @@ export default function WarningLetterPage() {
       title="Warning Letter Generator"
       description="Generate a formal employee warning letter in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div>

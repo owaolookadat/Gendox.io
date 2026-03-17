@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateDemandLetter,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function DemandLetterPage() {
+  const seoData = getToolSeoContent("demand-letter");
+  const relatedTools = getRelatedTools("demand-letter");
   const [formData, setFormData] = useState<DemandLetterData>({
     yourName: "",
     yourAddress: "",
@@ -63,6 +66,10 @@ export default function DemandLetterPage() {
       title="Demand Letter Generator"
       description="Create a formal demand letter in seconds. Free online tool, download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         {/* Your Details */}

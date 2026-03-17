@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateAuthorizationLetter,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function AuthorizationLetterPage() {
+  const seoData = getToolSeoContent("authorization-letter");
+  const relatedTools = getRelatedTools("authorization-letter");
   const [formData, setFormData] = useState<AuthorizationLetterData>({
     yourName: "",
     yourId: "",
@@ -56,6 +59,10 @@ export default function AuthorizationLetterPage() {
       title="Authorization Letter Generator"
       description="Create a formal authorization letter in seconds. Free online tool, download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         {/* Authorizer Details */}

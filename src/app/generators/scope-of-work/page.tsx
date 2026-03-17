@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import { generateScopeOfWork, ScopeOfWorkData } from "@/lib/generators/scope-of-work";
 import { saveAs } from "file-saver";
@@ -11,6 +12,8 @@ function slugify(text: string): string {
 }
 
 export default function ScopeOfWorkPage() {
+  const seoData = getToolSeoContent("scope-of-work");
+  const relatedTools = getRelatedTools("scope-of-work");
   const [projectTitle, setProjectTitle] = useState("");
   const [clientName, setClientName] = useState("");
   const [clientCompany, setClientCompany] = useState("");
@@ -51,6 +54,10 @@ export default function ScopeOfWorkPage() {
       title="Scope of Work Generator"
       description="Create a professional scope of work document in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div>

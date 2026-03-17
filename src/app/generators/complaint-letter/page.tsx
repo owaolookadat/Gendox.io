@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateComplaintLetter,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function ComplaintLetterPage() {
+  const seoData = getToolSeoContent("complaint-letter");
+  const relatedTools = getRelatedTools("complaint-letter");
   const [yourName, setYourName] = useState("");
   const [yourAddress, setYourAddress] = useState("");
   const [recipientName, setRecipientName] = useState("");
@@ -72,6 +75,10 @@ export default function ComplaintLetterPage() {
       title="Complaint Letter Generator"
       description="Generate a formal complaint letter in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div>

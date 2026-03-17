@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateQuotation,
@@ -40,6 +41,8 @@ const emptyItem = (): QuotationLineItem => ({
 });
 
 export default function QuotationPage() {
+  const seoData = getToolSeoContent("quotation");
+  const relatedTools = getRelatedTools("quotation");
   const [businessName, setBusinessName] = useState("");
   const [businessAddress, setBusinessAddress] = useState("");
   const [businessEmail, setBusinessEmail] = useState("");
@@ -126,6 +129,10 @@ export default function QuotationPage() {
       title="Quotation Generator"
       description="Create a professional quotation online for free. Add line items and download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-gray-900">Your Business</h2>

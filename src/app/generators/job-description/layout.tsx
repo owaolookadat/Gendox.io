@@ -1,7 +1,16 @@
 import { getToolMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
+import { getToolJsonLd } from "@/lib/structured-data";
 
-export const metadata = getToolMetadata("job-description");
+const meta = getToolMetadata("job-description");
+export const metadata = meta;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  const jsonLd = getToolJsonLd("job-description", meta.title as string, meta.description as string);
+  return (
+    <>
+      <JsonLd data={jsonLd} />
+      {children}
+    </>
+  );
 }

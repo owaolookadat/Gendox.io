@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateLetterOfIntent,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function LetterOfIntentPage() {
+  const seoData = getToolSeoContent("letter-of-intent");
+  const relatedTools = getRelatedTools("letter-of-intent");
   const [formData, setFormData] = useState<LetterOfIntentData>({
     yourName: "",
     yourTitle: "",
@@ -60,6 +63,10 @@ export default function LetterOfIntentPage() {
       title="Letter of Intent Generator"
       description="Create a professional letter of intent in seconds. Free online tool, download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         {/* Your Details */}

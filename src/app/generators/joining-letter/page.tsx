@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateJoiningLetter,
@@ -19,6 +20,8 @@ function slugify(text: string): string {
 }
 
 export default function JoiningLetterPage() {
+  const seoData = getToolSeoContent("joining-letter");
+  const relatedTools = getRelatedTools("joining-letter");
   const [companyName, setCompanyName] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
   const [employeeName, setEmployeeName] = useState("");
@@ -67,6 +70,10 @@ export default function JoiningLetterPage() {
       title="Joining Letter Generator"
       description="Create a formal joining / appointment letter in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div>

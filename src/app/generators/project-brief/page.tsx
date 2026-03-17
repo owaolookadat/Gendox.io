@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import { generateProjectBrief, ProjectBriefData } from "@/lib/generators/project-brief";
 import { saveAs } from "file-saver";
@@ -11,6 +12,8 @@ function slugify(text: string): string {
 }
 
 export default function ProjectBriefPage() {
+  const seoData = getToolSeoContent("project-brief");
+  const relatedTools = getRelatedTools("project-brief");
   const [projectName, setProjectName] = useState("");
   const [projectOwner, setProjectOwner] = useState("");
   const [date, setDate] = useState("");
@@ -50,6 +53,10 @@ export default function ProjectBriefPage() {
       title="Project Brief Generator"
       description="Create a professional project brief document in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

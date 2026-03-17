@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import { generateMemo } from "@/lib/generators/memo";
 import { saveAs } from "file-saver";
@@ -20,6 +21,8 @@ function slugify(text: string): string {
 const PRIORITIES = ["Normal", "High", "Urgent"];
 
 export default function MemoPage() {
+  const seoData = getToolSeoContent("memo");
+  const relatedTools = getRelatedTools("memo");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [cc, setCc] = useState("");
@@ -59,6 +62,10 @@ export default function MemoPage() {
       title="Memo Generator"
       description="Create a professional internal memo in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-gray-900">Memo Details</h2>

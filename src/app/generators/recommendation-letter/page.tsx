@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateRecommendationLetter,
@@ -19,6 +20,8 @@ function slugify(text: string): string {
 }
 
 export default function RecommendationLetterPage() {
+  const seoData = getToolSeoContent("recommendation-letter");
+  const relatedTools = getRelatedTools("recommendation-letter");
   const [yourName, setYourName] = useState("");
   const [yourTitle, setYourTitle] = useState("");
   const [yourOrganization, setYourOrganization] = useState("");
@@ -69,6 +72,10 @@ export default function RecommendationLetterPage() {
       title="Recommendation Letter Generator"
       description="Generate a professional recommendation letter in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

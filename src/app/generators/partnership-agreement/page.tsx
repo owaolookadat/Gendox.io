@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generatePartnershipAgreement,
@@ -20,6 +21,8 @@ function slugify(text: string): string {
 }
 
 export default function PartnershipAgreementPage() {
+  const seoData = getToolSeoContent("partnership-agreement");
+  const relatedTools = getRelatedTools("partnership-agreement");
   const [partnershipName, setPartnershipName] = useState("");
   const [businessType, setBusinessType] = useState("");
   const [partner1Name, setPartner1Name] = useState("");
@@ -89,6 +92,10 @@ export default function PartnershipAgreementPage() {
       title="Partnership Agreement Generator"
       description="Generate a professional partnership agreement in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

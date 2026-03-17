@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateLeaveApplication,
@@ -28,6 +29,8 @@ function slugify(text: string): string {
 }
 
 export default function LeaveApplicationPage() {
+  const seoData = getToolSeoContent("leave-application");
+  const relatedTools = getRelatedTools("leave-application");
   const [employeeName, setEmployeeName] = useState("");
   const [employeeId, setEmployeeId] = useState("");
   const [department, setDepartment] = useState("");
@@ -74,6 +77,10 @@ export default function LeaveApplicationPage() {
       title="Leave Application Generator"
       description="Create a formal leave application letter in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

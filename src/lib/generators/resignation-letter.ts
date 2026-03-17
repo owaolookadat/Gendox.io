@@ -28,62 +28,136 @@ function formatDate(dateString: string): string {
   });
 }
 
-function getReasonSentence(reason: string, tone: Tone): string {
+function isLeadershipRole(jobTitle: string): boolean {
+  const keywords = ["manager", "director", "lead", "head", "vp", "senior", "supervisor"];
+  const lower = jobTitle.toLowerCase();
+  return keywords.some((kw) => lower.includes(kw));
+}
+
+function getNoticePeriodSentence(noticePeriod: string, lastDayFormatted: string): string {
+  if (!noticePeriod || noticePeriod === "Immediate") {
+    return `I am writing to formally notify you of my resignation from my position, effective immediately as of ${lastDayFormatted}.`;
+  }
+  return `I am writing to formally notify you of my resignation, providing ${noticePeriod.toLowerCase()} notice. My last working day will be ${lastDayFormatted}.`;
+}
+
+function getReasonSentence(reason: string, tone: Tone): string[] {
   if (tone === "brief") {
     switch (reason) {
       case "New Opportunity":
-        return "I have accepted a position elsewhere.";
+        return ["I have accepted a position elsewhere."];
       case "Personal Reasons":
-        return "I am leaving for personal reasons.";
+        return ["I am leaving for personal reasons."];
       case "Career Change":
-        return "I am pursuing a change in career direction.";
+        return ["I am pursuing a change in career direction."];
       case "Relocation":
-        return "I am relocating and unable to continue in this role.";
+        return ["I am relocating and unable to continue in this role."];
       case "Other":
-        return "I have decided to move on from this position.";
+        return ["I have decided to move on from this position."];
       default:
-        return "";
+        return [];
     }
   }
 
   if (tone === "grateful") {
     switch (reason) {
       case "New Opportunity":
-        return "While I have greatly valued my time here, I have been offered an exciting new opportunity that I feel I must pursue for my continued professional development.";
+        return [
+          "While I have greatly valued my time here, I have been offered an exciting new opportunity that I feel I must pursue for my continued professional development.",
+          "The encouragement and support I have received from you and the team gave me the confidence to take this step.",
+        ];
       case "Personal Reasons":
-        return "Due to personal circumstances, I have made the difficult decision to step away from this role, though I do so with a heavy heart given how rewarding this experience has been.";
+        return [
+          "Due to personal circumstances, I have made the difficult decision to step away from this role, though I do so with a heavy heart given how rewarding this experience has been.",
+          "I am deeply grateful for the understanding and flexibility you have always shown, which has made my time here truly meaningful.",
+        ];
       case "Career Change":
-        return "After much reflection, I have decided to pursue a different career path. The skills and experiences I have gained here have been instrumental in helping me identify this new direction.";
+        return [
+          "After much reflection, I have decided to pursue a different career path. The skills and experiences I have gained here have been instrumental in helping me identify this new direction.",
+          "The encouragement and support I have received from you and the team gave me the confidence to take this step.",
+        ];
       case "Relocation":
-        return "I am relocating and will unfortunately no longer be able to continue in this position. I am truly grateful for the wonderful experience of working with you and the team.";
+        return [
+          "I am relocating and will unfortunately no longer be able to continue in this position. I am truly grateful for the wonderful experience of working with you and the team.",
+          "The memories and professional relationships I have built here will stay with me wherever I go.",
+        ];
       case "Other":
-        return "After careful and thoughtful consideration, I have decided to move on from this position. I want you to know how much I have valued my time here.";
+        return [
+          "After careful and thoughtful consideration, I have decided to move on from this position. I want you to know how much I have valued my time here.",
+          "The growth I have experienced both professionally and personally during my tenure is something I will always treasure.",
+        ];
       default:
-        return "";
+        return [];
     }
   }
 
   // professional (default)
   switch (reason) {
     case "New Opportunity":
-      return "I have accepted a new position that aligns with my long-term career objectives and will allow me to continue growing professionally.";
+      return [
+        "I have accepted a new position that aligns with my long-term career objectives and will allow me to continue growing professionally.",
+        "I am confident that this move will allow me to continue developing the skills I have honed during my time here.",
+      ];
     case "Personal Reasons":
-      return "I am resigning due to personal reasons that require my full attention at this time.";
+      return [
+        "I am resigning due to personal reasons that require my full attention at this time.",
+        "This decision was not made lightly, and I remain committed to a professional transition.",
+      ];
     case "Career Change":
-      return "I have decided to pursue a career change that I believe will be the right next step in my professional journey.";
+      return [
+        "I have decided to pursue a career change that I believe will be the right next step in my professional journey.",
+        "The experience and expertise I have gained in this role have been invaluable in shaping this decision.",
+      ];
     case "Relocation":
-      return "I am relocating and will no longer be able to fulfil the requirements of this role.";
+      return [
+        "I am relocating and will no longer be able to fulfil the requirements of this role.",
+        "I remain committed to ensuring all responsibilities are properly handed over before my departure.",
+      ];
     case "Other":
-      return "After careful consideration, I have decided to move on from this position to explore new opportunities.";
+      return [
+        "After careful consideration, I have decided to move on from this position to explore new opportunities.",
+        "This decision reflects my professional goals and is not a reflection of my experience here, which has been consistently positive.",
+      ];
     default:
-      return "";
+      return [];
   }
 }
 
-function getTransitionSentence(tone: Tone): string {
+function getHandoverSentence(jobTitle: string): string {
+  if (isLeadershipRole(jobTitle)) {
+    return "I will prepare a comprehensive handover document covering all ongoing projects and team responsibilities to ensure continuity.";
+  }
+  return "I will complete all outstanding tasks and document any ongoing work to ensure a smooth handover.";
+}
+
+function getTransitionSentence(tone: Tone, noticePeriod: string): string {
   if (tone === "brief") {
+    if (!noticePeriod || noticePeriod === "Immediate") {
+      return "I understand the short notice and will do everything I can to ensure a smooth transition before my departure.";
+    }
     return "I will ensure a smooth handover during my remaining time.";
   }
+
+  if (!noticePeriod || noticePeriod === "Immediate") {
+    return "I understand the short notice and will do everything I can to ensure a smooth transition before my departure.";
+  }
+
+  if (noticePeriod === "1 Week" || noticePeriod === "2 Weeks") {
+    const period = noticePeriod.toLowerCase();
+    if (tone === "grateful") {
+      return `During my remaining ${period}, I am fully committed to completing all pending work and supporting the handover process. Please let me know how I can best help during this time.`;
+    }
+    return `During my remaining ${period}, I am committed to completing all pending work and supporting the handover process.`;
+  }
+
+  if (noticePeriod === "1 Month") {
+    if (tone === "grateful") {
+      return "With a full month ahead, I will work closely with you to ensure all responsibilities are properly transitioned and my replacement, if hired, is thoroughly briefed. I want to make this as seamless as possible for you and the team.";
+    }
+    return "With a full month ahead, I will work closely with you to ensure all responsibilities are properly transitioned and my replacement, if hired, is thoroughly briefed.";
+  }
+
+  // "Other" or any custom notice period
   if (tone === "grateful") {
     return "I am fully committed to making this transition as seamless as possible. Please let me know how I can best support the handover process and help train my replacement during my remaining time.";
   }
@@ -100,13 +174,61 @@ function getClosingSentence(tone: Tone): string {
   return "Thank you for the opportunities for professional growth that I have been afforded during my time at the company. I wish you and the team continued success.";
 }
 
-export function generateLetterText(data: ResignationLetterData): string {
-  const todayFormatted = formatDate(new Date().toISOString());
+/**
+ * Returns the body paragraphs of the letter as an array of strings.
+ * Does NOT include header blocks (sender info, date, recipient) or sign-off.
+ * Used by both the preview component and generateLetterText.
+ */
+export function generateLetterParagraphs(data: ResignationLetterData): string[] {
   const lastDayFormatted = data.lastWorkingDay
     ? formatDate(data.lastWorkingDay)
     : "[Last Working Day]";
   const tone = data.tone || "professional";
-  const reasonSentence = data.reason ? getReasonSentence(data.reason, tone) : "";
+  const paragraphs: string[] = [];
+
+  // Opening paragraph with notice period
+  const jobTitleText = data.jobTitle || "[Job Title]";
+  const companyText = data.companyName || "[Company Name]";
+  if (!data.noticePeriod || data.noticePeriod === "Immediate") {
+    paragraphs.push(
+      `I am writing to formally notify you of my resignation from my position as ${jobTitleText} at ${companyText}, effective immediately as of ${lastDayFormatted}.`
+    );
+  } else {
+    paragraphs.push(
+      `I am writing to formally notify you of my resignation from my position as ${jobTitleText} at ${companyText}, providing ${data.noticePeriod.toLowerCase()} notice. My last working day will be ${lastDayFormatted}.`
+    );
+  }
+
+  // Reason sentences
+  if (data.reason) {
+    const reasonSentences = getReasonSentence(data.reason, tone);
+    if (reasonSentences.length > 0) {
+      paragraphs.push(reasonSentences.join(" "));
+    }
+  }
+
+  // Personal message
+  if (data.personalMessage && data.personalMessage.trim()) {
+    paragraphs.push(data.personalMessage.trim());
+  }
+
+  // Role-aware handover sentence
+  if (data.jobTitle) {
+    paragraphs.push(getHandoverSentence(data.jobTitle));
+  }
+
+  // Notice-period-aware transition sentence
+  paragraphs.push(getTransitionSentence(tone, data.noticePeriod));
+
+  // Closing
+  paragraphs.push(getClosingSentence(tone));
+
+  return paragraphs;
+}
+
+export function generateLetterText(data: ResignationLetterData): string {
+  const todayFormatted = formatDate(new Date().toISOString());
+  const tone = data.tone || "professional";
 
   const lines: string[] = [];
 
@@ -124,27 +246,13 @@ export function generateLetterText(data: ResignationLetterData): string {
   lines.push("");
   lines.push(`Dear ${data.managerName || "[Manager Name]"},`);
   lines.push("");
-  lines.push(
-    `I am writing to formally notify you of my resignation from my position as ${data.jobTitle || "[Job Title]"} at ${data.companyName || "[Company Name]"}, effective ${lastDayFormatted}.`
-  );
 
-  if (reasonSentence) {
+  const bodyParagraphs = generateLetterParagraphs(data);
+  for (const p of bodyParagraphs) {
+    lines.push(p);
     lines.push("");
-    lines.push(reasonSentence);
   }
 
-  if (data.personalMessage && data.personalMessage.trim()) {
-    lines.push("");
-    lines.push(data.personalMessage.trim());
-  }
-
-  lines.push("");
-  lines.push(getTransitionSentence(tone));
-
-  lines.push("");
-  lines.push(getClosingSentence(tone));
-
-  lines.push("");
   lines.push("Yours sincerely,");
   lines.push("");
   lines.push("");
@@ -157,11 +265,7 @@ export async function generateResignationLetter(
   data: ResignationLetterData
 ): Promise<Blob> {
   const todayFormatted = formatDate(new Date().toISOString());
-  const lastDayFormatted = data.lastWorkingDay
-    ? formatDate(data.lastWorkingDay)
-    : "";
   const tone = data.tone || "professional";
-  const reasonSentence = data.reason ? getReasonSentence(data.reason, tone) : "";
 
   const FONT = "Calibri";
   const BODY_SIZE = 24; // 12pt
@@ -322,75 +426,18 @@ export async function generateResignationLetter(
     })
   );
 
-  // Main paragraph
-  paragraphs.push(
-    new Paragraph({
-      spacing: { after: SPACING_AFTER },
-      children: [
-        new TextRun({
-          text: `I am writing to formally notify you of my resignation from my position as ${data.jobTitle} at ${data.companyName}, effective ${lastDayFormatted}.`,
-          size: BODY_SIZE,
-          font: FONT,
-        }),
-      ],
-    })
-  );
-
-  // Reason paragraph
-  if (reasonSentence) {
+  // Body paragraphs from shared function
+  const bodyParagraphs = generateLetterParagraphs(data);
+  for (const bodyText of bodyParagraphs) {
     paragraphs.push(
       new Paragraph({
         spacing: { after: SPACING_AFTER },
         children: [
-          new TextRun({ text: reasonSentence, size: BODY_SIZE, font: FONT }),
+          new TextRun({ text: bodyText, size: BODY_SIZE, font: FONT }),
         ],
       })
     );
   }
-
-  // Personal message paragraph
-  if (data.personalMessage && data.personalMessage.trim()) {
-    paragraphs.push(
-      new Paragraph({
-        spacing: { after: SPACING_AFTER },
-        children: [
-          new TextRun({
-            text: data.personalMessage.trim(),
-            size: BODY_SIZE,
-            font: FONT,
-          }),
-        ],
-      })
-    );
-  }
-
-  // Transition paragraph
-  paragraphs.push(
-    new Paragraph({
-      spacing: { after: SPACING_AFTER },
-      children: [
-        new TextRun({
-          text: getTransitionSentence(tone),
-          size: BODY_SIZE,
-          font: FONT,
-        }),
-      ],
-    })
-  );
-
-  // Closing thank you
-  paragraphs.push(
-    new Paragraph({
-      spacing: { after: SPACING_AFTER },
-      children: [
-        new TextRun({
-          text: getClosingSentence(tone),
-          size: BODY_SIZE,
-          font: FONT,
-        }),
-      ],
-    })
-  );
 
   // Yours sincerely
   paragraphs.push(

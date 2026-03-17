@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import { generateJobDescription, JobDescriptionData } from "@/lib/generators/job-description";
 import { saveAs } from "file-saver";
@@ -13,6 +14,8 @@ function slugify(text: string): string {
 }
 
 export default function JobDescriptionPage() {
+  const seoData = getToolSeoContent("job-description");
+  const relatedTools = getRelatedTools("job-description");
   const [companyName, setCompanyName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [department, setDepartment] = useState("");
@@ -51,6 +54,10 @@ export default function JobDescriptionPage() {
       title="Job Description Generator"
       description="Create a professional job description in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

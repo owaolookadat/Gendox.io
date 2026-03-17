@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateOfferLetter,
@@ -20,6 +21,8 @@ function slugify(text: string): string {
 }
 
 export default function OfferLetterPage() {
+  const seoData = getToolSeoContent("offer-letter");
+  const relatedTools = getRelatedTools("offer-letter");
   const [companyName, setCompanyName] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
   const [candidateName, setCandidateName] = useState("");
@@ -75,6 +78,10 @@ export default function OfferLetterPage() {
       title="Offer Letter Generator"
       description="Create a professional job offer letter in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div>

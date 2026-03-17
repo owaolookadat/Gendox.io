@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import { generateCompanyProfile, CompanyProfileData } from "@/lib/generators/company-profile";
 import { saveAs } from "file-saver";
@@ -13,6 +14,8 @@ function slugify(text: string): string {
 }
 
 export default function CompanyProfilePage() {
+  const seoData = getToolSeoContent("company-profile");
+  const relatedTools = getRelatedTools("company-profile");
   const [companyName, setCompanyName] = useState("");
   const [foundedYear, setFoundedYear] = useState("");
   const [headquarters, setHeadquarters] = useState("");
@@ -50,6 +53,10 @@ export default function CompanyProfilePage() {
       title="Company Profile Generator"
       description="Create a professional company profile document in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

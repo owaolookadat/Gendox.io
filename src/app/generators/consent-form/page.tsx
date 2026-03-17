@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateConsentForm,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function ConsentFormPage() {
+  const seoData = getToolSeoContent("consent-form");
+  const relatedTools = getRelatedTools("consent-form");
   const [formData, setFormData] = useState<ConsentFormData>({
     organizationName: "",
     purpose: "Medical Procedure",
@@ -60,6 +63,10 @@ export default function ConsentFormPage() {
       title="Consent Form Generator"
       description="Create a professional consent form in seconds. Free online tool, download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

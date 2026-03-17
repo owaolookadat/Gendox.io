@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateInternshipCertificate,
@@ -24,6 +25,8 @@ function slugify(text: string): string {
 }
 
 export default function InternshipCertificatePage() {
+  const seoData = getToolSeoContent("internship-certificate");
+  const relatedTools = getRelatedTools("internship-certificate");
   const [organizationName, setOrganizationName] = useState("");
   const [internName, setInternName] = useState("");
   const [department, setDepartment] = useState("");
@@ -74,6 +77,10 @@ export default function InternshipCertificatePage() {
       title="Internship Certificate Generator"
       description="Create a professional internship completion certificate in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div>

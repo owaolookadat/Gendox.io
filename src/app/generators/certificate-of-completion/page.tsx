@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateCertificateOfCompletion,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function CertificateOfCompletionPage() {
+  const seoData = getToolSeoContent("certificate-of-completion");
+  const relatedTools = getRelatedTools("certificate-of-completion");
   const [recipientName, setRecipientName] = useState("");
   const [courseName, setCourseName] = useState("");
   const [organizationName, setOrganizationName] = useState("");
@@ -63,6 +66,10 @@ export default function CertificateOfCompletionPage() {
       title="Certificate of Completion Generator"
       description="Create a formal certificate of completion in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateRelievingLetter,
@@ -24,6 +25,8 @@ function slugify(text: string): string {
 }
 
 export default function RelievingLetterPage() {
+  const seoData = getToolSeoContent("relieving-letter");
+  const relatedTools = getRelatedTools("relieving-letter");
   const [companyName, setCompanyName] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
   const [employeeName, setEmployeeName] = useState("");
@@ -76,6 +79,10 @@ export default function RelievingLetterPage() {
       title="Relieving Letter Generator"
       description="Create a formal relieving letter confirming employee separation in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div>

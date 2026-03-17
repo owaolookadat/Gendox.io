@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generatePermissionLetter,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function PermissionLetterPage() {
+  const seoData = getToolSeoContent("permission-letter");
+  const relatedTools = getRelatedTools("permission-letter");
   const [formData, setFormData] = useState<PermissionLetterData>({
     yourName: "",
     yourTitle: "",
@@ -56,6 +59,10 @@ export default function PermissionLetterPage() {
       title="Permission Letter Generator"
       description="Create a formal permission request letter in seconds. Free online tool, download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         {/* Your Details */}

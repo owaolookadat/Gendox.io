@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateBillOfSale,
@@ -27,6 +28,8 @@ function slugify(text: string): string {
 }
 
 export default function BillOfSalePage() {
+  const seoData = getToolSeoContent("bill-of-sale");
+  const relatedTools = getRelatedTools("bill-of-sale");
   const [sellerName, setSellerName] = useState("");
   const [sellerAddress, setSellerAddress] = useState("");
   const [buyerName, setBuyerName] = useState("");
@@ -85,6 +88,10 @@ export default function BillOfSalePage() {
       title="Bill of Sale Generator"
       description="Generate a professional bill of sale in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

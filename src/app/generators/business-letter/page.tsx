@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateBusinessLetter,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function BusinessLetterPage() {
+  const seoData = getToolSeoContent("business-letter");
+  const relatedTools = getRelatedTools("business-letter");
   const [formData, setFormData] = useState<BusinessLetterData>({
     yourName: "",
     yourTitle: "",
@@ -62,6 +65,10 @@ export default function BusinessLetterPage() {
       title="Business Letter Generator"
       description="Create a professional business letter in seconds. Free online tool, download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         {/* Sender Details */}

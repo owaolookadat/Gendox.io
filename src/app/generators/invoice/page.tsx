@@ -2,7 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import ToolShell from "@/components/ToolShell";
-import DownloadButton from "@/components/DownloadButton";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
+import DocumentPreview from "@/components/DocumentPreview";
+import { useDocumentFlow } from "@/hooks/useDocumentFlow";
 import {
   generateInvoice,
   LineItem,
@@ -45,6 +47,10 @@ function RequiredMark() {
 }
 
 export default function InvoicePage() {
+  const seoData = getToolSeoContent("invoice");
+  const relatedTools = getRelatedTools("invoice");
+  const { isEditing, isPreviewing, showPreview, goBackToEdit } = useDocumentFlow();
+
   const [businessName, setBusinessName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
@@ -153,12 +159,25 @@ export default function InvoicePage() {
   const totalColor =
     total > 0 ? "text-blue-600" : "text-gray-400";
 
+  const currencySymbol = currency.symbol;
+  const bankName = paymentDetails.bankName;
+  const accountNumber = paymentDetails.accountNumber;
+  const sortCode = paymentDetails.sortCode;
+  const items = lineItems;
+  const businessEmail = email;
+  const businessAddress = address;
+
   return (
     <ToolShell
       title="Invoice Generator"
       description="Create a professional invoice online for free. Add line items and download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
+      {isEditing && (
       <div className="space-y-6">
         {/* Live Preview Summary */}
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-5">
@@ -666,12 +685,106 @@ export default function InvoicePage() {
           </div>
         )}
 
-        {/* Download */}
-        <DownloadButton
-          onClick={handleDownload}
+        {/* Generate Invoice Button */}
+        <button
+          onClick={showPreview}
           disabled={!canDownload}
-        />
+          className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
+        >
+          Generate Invoice
+        </button>
       </div>
+      )}
+
+      {isPreviewing && (
+        <DocumentPreview documentTitle="Invoice Preview" onDownload={handleDownload} onEdit={goBackToEdit}>
+          <div className="font-sans text-sm text-gray-800">
+            {/* Header: business info left, INVOICE right */}
+            <div className="flex justify-between items-start mb-8">
+              <div>
+                <p className="font-bold text-base">{businessName}</p>
+                {businessEmail && <p className="text-xs text-gray-500">{businessEmail}</p>}
+                {businessAddress && <p className="text-xs text-gray-500 whitespace-pre-line">{businessAddress}</p>}
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-bold text-blue-600">INVOICE</p>
+                <p className="text-xs text-gray-500">#{invoiceNumber}</p>
+                <p className="text-xs text-gray-500">Date: {invoiceDate}</p>
+                <p className="text-xs text-gray-500">Due: {dueDate}</p>
+              </div>
+            </div>
+
+            {/* Bill To */}
+            <div className="mb-6">
+              <p className="text-xs font-bold text-blue-600 uppercase mb-1">Bill To</p>
+              <p className="font-semibold">{clientName}</p>
+              {clientAddress && <p className="text-xs text-gray-500 whitespace-pre-line">{clientAddress}</p>}
+            </div>
+
+            {/* Line Items Table */}
+            <table className="w-full mb-6 text-xs">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="text-left py-2 px-3 font-semibold">Description</th>
+                  <th className="text-right py-2 px-3 font-semibold w-16">Qty</th>
+                  <th className="text-right py-2 px-3 font-semibold w-24">Unit Price</th>
+                  <th className="text-right py-2 px-3 font-semibold w-24">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.filter(item => item.description).map((item, i) => (
+                  <tr key={i} className="border-b border-gray-100">
+                    <td className="py-2 px-3">{item.description}</td>
+                    <td className="text-right py-2 px-3">{item.quantity}</td>
+                    <td className="text-right py-2 px-3">{currencySymbol}{item.unitPrice.toFixed(2)}</td>
+                    <td className="text-right py-2 px-3">{currencySymbol}{(item.quantity * item.unitPrice).toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Totals */}
+            <div className="flex justify-end mb-6">
+              <div className="w-48">
+                <div className="flex justify-between py-1 text-xs">
+                  <span>Subtotal</span>
+                  <span>{currencySymbol}{subtotal.toFixed(2)}</span>
+                </div>
+                {taxRate > 0 && (
+                  <div className="flex justify-between py-1 text-xs">
+                    <span>Tax ({taxRate}%)</span>
+                    <span>{currencySymbol}{taxAmount.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between py-2 border-t border-gray-800 font-bold text-blue-600">
+                  <span>Total</span>
+                  <span>{currencySymbol}{total.toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Details */}
+            {(bankName || accountNumber || sortCode) && (
+              <div className="mb-4">
+                <p className="text-xs font-bold text-blue-600 uppercase mb-1">Payment Details</p>
+                {bankName && <p className="text-xs">Bank: {bankName}</p>}
+                {accountNumber && <p className="text-xs">Account: {accountNumber}</p>}
+                {sortCode && <p className="text-xs">Sort Code: {sortCode}</p>}
+              </div>
+            )}
+
+            {/* Notes */}
+            {notes && (
+              <div className="mt-4">
+                <p className="text-xs font-bold text-blue-600 uppercase mb-1">Notes</p>
+                <p className="text-xs text-gray-500 italic">{notes}</p>
+              </div>
+            )}
+
+            <p className="text-center text-xs text-gray-400 mt-8">Thank you for your business!</p>
+          </div>
+        </DocumentPreview>
+      )}
     </ToolShell>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateWaiverForm,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function WaiverFormPage() {
+  const seoData = getToolSeoContent("waiver-form");
+  const relatedTools = getRelatedTools("waiver-form");
   const [formData, setFormData] = useState<WaiverFormData>({
     organizationName: "",
     activityName: "",
@@ -63,6 +66,10 @@ export default function WaiverFormPage() {
       title="Waiver Form Generator"
       description="Create a liability waiver and release form in seconds. Free online tool, download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

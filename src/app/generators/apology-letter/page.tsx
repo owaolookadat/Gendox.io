@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateApologyLetter,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function ApologyLetterPage() {
+  const seoData = getToolSeoContent("apology-letter");
+  const relatedTools = getRelatedTools("apology-letter");
   const [formData, setFormData] = useState<ApologyLetterData>({
     yourName: "",
     recipientName: "",
@@ -55,6 +58,10 @@ export default function ApologyLetterPage() {
       title="Apology Letter Generator"
       description="Create a sincere apology letter in seconds. Free online tool, download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generatePowerOfAttorney,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function PowerOfAttorneyPage() {
+  const seoData = getToolSeoContent("power-of-attorney");
+  const relatedTools = getRelatedTools("power-of-attorney");
   const [formData, setFormData] = useState<PowerOfAttorneyData>({
     principalName: "",
     principalAddress: "",
@@ -66,6 +69,10 @@ export default function PowerOfAttorneyPage() {
       title="Power of Attorney Generator"
       description="Create a power of attorney document in seconds. Free online tool, download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

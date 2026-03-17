@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generatePerformanceReview,
@@ -25,6 +26,8 @@ function slugify(text: string): string {
 }
 
 export default function PerformanceReviewPage() {
+  const seoData = getToolSeoContent("performance-review");
+  const relatedTools = getRelatedTools("performance-review");
   const [employeeName, setEmployeeName] = useState("");
   const [employeeTitle, setEmployeeTitle] = useState("");
   const [department, setDepartment] = useState("");
@@ -74,6 +77,10 @@ export default function PerformanceReviewPage() {
       title="Performance Review Generator"
       description="Create a professional performance review document in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

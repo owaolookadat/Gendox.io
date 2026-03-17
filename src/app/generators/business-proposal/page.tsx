@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import { generateBusinessProposal } from "@/lib/generators/business-proposal";
 import { saveAs } from "file-saver";
@@ -14,6 +15,8 @@ function slugify(text: string): string {
 }
 
 export default function BusinessProposalPage() {
+  const seoData = getToolSeoContent("business-proposal");
+  const relatedTools = getRelatedTools("business-proposal");
   const [yourName, setYourName] = useState("");
   const [yourTitle, setYourTitle] = useState("");
   const [yourCompany, setYourCompany] = useState("");
@@ -66,6 +69,10 @@ export default function BusinessProposalPage() {
       title="Business Proposal Generator"
       description="Create a professional business proposal in minutes. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-gray-900">Your Details</h2>

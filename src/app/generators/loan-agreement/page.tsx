@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateLoanAgreement,
@@ -25,6 +26,8 @@ function slugify(text: string): string {
 }
 
 export default function LoanAgreementPage() {
+  const seoData = getToolSeoContent("loan-agreement");
+  const relatedTools = getRelatedTools("loan-agreement");
   const [lenderName, setLenderName] = useState("");
   const [lenderAddress, setLenderAddress] = useState("");
   const [borrowerName, setBorrowerName] = useState("");
@@ -87,6 +90,10 @@ export default function LoanAgreementPage() {
       title="Loan Agreement Generator"
       description="Generate a professional loan agreement in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

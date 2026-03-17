@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import { generateMeetingMinutes } from "@/lib/generators/meeting-minutes";
 import { saveAs } from "file-saver";
@@ -18,6 +19,8 @@ function slugify(text: string): string {
 }
 
 export default function MeetingMinutesPage() {
+  const seoData = getToolSeoContent("meeting-minutes");
+  const relatedTools = getRelatedTools("meeting-minutes");
   const [meetingTitle, setMeetingTitle] = useState("");
   const [date, setDate] = useState(todayString);
   const [time, setTime] = useState("");
@@ -66,6 +69,10 @@ export default function MeetingMinutesPage() {
       title="Meeting Minutes Generator"
       description="Create professional meeting minutes in minutes. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-gray-900">Meeting Details</h2>

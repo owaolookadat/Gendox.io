@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import { generatePressRelease, PressReleaseData } from "@/lib/generators/press-release";
 import { saveAs } from "file-saver";
@@ -11,6 +12,8 @@ function slugify(text: string): string {
 }
 
 export default function PressReleasePage() {
+  const seoData = getToolSeoContent("press-release");
+  const relatedTools = getRelatedTools("press-release");
   const [companyName, setCompanyName] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
   const [contactName, setContactName] = useState("");
@@ -49,6 +52,10 @@ export default function PressReleasePage() {
       title="Press Release Generator"
       description="Create a professional press release in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

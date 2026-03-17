@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateEvictionNotice,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function EvictionNoticePage() {
+  const seoData = getToolSeoContent("eviction-notice");
+  const relatedTools = getRelatedTools("eviction-notice");
   const [formData, setFormData] = useState<EvictionNoticeData>({
     landlordName: "",
     landlordAddress: "",
@@ -62,6 +65,10 @@ export default function EvictionNoticePage() {
       title="Eviction Notice Generator"
       description="Create a formal eviction notice in seconds. Free online tool, download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

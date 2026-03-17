@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
-import DownloadButton from "@/components/DownloadButton";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
+import DocumentPreview from "@/components/DocumentPreview";
+import { useDocumentFlow } from "@/hooks/useDocumentFlow";
 import { generateNDA, NDAData } from "@/lib/generators/nda";
 import { saveAs } from "file-saver";
 
@@ -60,6 +62,10 @@ function RequiredIndicator() {
 }
 
 export default function NDAPage() {
+  const seoData = getToolSeoContent("nda");
+  const relatedTools = getRelatedTools("nda");
+  const { isEditing, isPreviewing, showPreview, goBackToEdit } = useDocumentFlow();
+
   const [agreementType, setAgreementType] = useState<"Mutual" | "One-Way">(
     "Mutual"
   );
@@ -117,12 +123,31 @@ export default function NDAPage() {
 
   const isMutual = agreementType === "Mutual";
 
+  const ndaType = agreementType.toLowerCase() as "mutual" | "one-way";
+  const partyAName = disclosingPartyName;
+  const partyATitle = disclosingPartyTitle;
+  const partyBName = receivingPartyName;
+  const partyBTitle = receivingPartyTitle;
+
+  const formattedEffectiveDate = effectiveDate
+    ? new Date(effectiveDate + "T00:00:00").toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+
   return (
     <ToolShell
       title="Non-Disclosure Agreement (NDA) Generator"
       description="Generate a professional, legally-structured NDA in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
+      {isEditing && (
       <div className="space-y-8">
         {/* ── Section 1: Agreement Type ── */}
         <div>
@@ -444,13 +469,15 @@ export default function NDAPage() {
           </div>
         </div>
 
-        {/* ── Download ── */}
+        {/* ── Generate Button ── */}
         <div className="space-y-4">
-          <DownloadButton
-            onClick={handleDownload}
+          <button
+            onClick={showPreview}
             disabled={!isValid}
-            label="Download NDA"
-          />
+            className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
+          >
+            Generate NDA
+          </button>
           {!isValid && (
             <p className="text-sm text-amber-600 text-center">
               Please fill in all required fields (marked with{" "}
@@ -478,6 +505,61 @@ export default function NDAPage() {
           </div>
         </div>
       </div>
+      )}
+
+      {isPreviewing && (
+        <DocumentPreview documentTitle="NDA Preview" onDownload={handleDownload} onEdit={goBackToEdit}>
+          <div className="font-serif text-sm text-gray-800 leading-relaxed">
+            <h1 className="text-center font-bold text-base mb-1">
+              {ndaType === "mutual" ? "MUTUAL NON-DISCLOSURE AGREEMENT" : "NON-DISCLOSURE AGREEMENT"}
+            </h1>
+            <hr className="mb-4 border-gray-400" />
+
+            <p className="mb-3">
+              This Non-Disclosure Agreement is entered into as of <strong>{formattedEffectiveDate}</strong> by
+              and between <strong>{partyAName}</strong>
+              {partyATitle ? ` (${partyATitle})` : ""} and <strong>{partyBName}</strong>
+              {partyBTitle ? ` (${partyBTitle})` : ""}.
+            </p>
+
+            <h2 className="font-bold mt-4 mb-2">1. DEFINITIONS</h2>
+            <p className="mb-2 ml-4">
+              1.1 &ldquo;Confidential Information&rdquo; means {confidentialInfoDefinition.length > 150
+                ? confidentialInfoDefinition.substring(0, 150) + "..."
+                : confidentialInfoDefinition}
+            </p>
+
+            <p className="text-center text-xs text-gray-400 my-6 italic">
+              ... Sections 2&ndash;6 (Obligations, Exclusions, Term &amp; Duration, Remedies, Return of Information) included in download ...
+            </p>
+
+            <h2 className="font-bold mt-4 mb-2">7. GOVERNING LAW</h2>
+            <p className="mb-2 ml-4">
+              This Agreement shall be governed by and construed in accordance with the laws of <strong>{governingLaw}</strong>.
+            </p>
+
+            {/* Signature blocks */}
+            <div className="mt-8 pt-4 border-t border-gray-300 grid grid-cols-2 gap-8">
+              <div>
+                <p className="font-bold mb-4">{ndaType === "mutual" ? "PARTY A" : "DISCLOSING PARTY"}</p>
+                <div className="border-b border-gray-400 mb-1 h-8"></div>
+                <p className="text-xs text-gray-500">Signature</p>
+                <p className="mt-2 text-xs">Name: {partyAName}</p>
+                {partyATitle && <p className="text-xs">Title: {partyATitle}</p>}
+                <p className="text-xs">Date: _______________</p>
+              </div>
+              <div>
+                <p className="font-bold mb-4">{ndaType === "mutual" ? "PARTY B" : "RECEIVING PARTY"}</p>
+                <div className="border-b border-gray-400 mb-1 h-8"></div>
+                <p className="text-xs text-gray-500">Signature</p>
+                <p className="mt-2 text-xs">Name: {partyBName}</p>
+                {partyBTitle && <p className="text-xs">Title: {partyBTitle}</p>}
+                <p className="text-xs">Date: _______________</p>
+              </div>
+            </div>
+          </div>
+        </DocumentPreview>
+      )}
     </ToolShell>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateTerminationLetter,
@@ -25,6 +26,8 @@ function slugify(text: string): string {
 }
 
 export default function TerminationLetterPage() {
+  const seoData = getToolSeoContent("termination-letter");
+  const relatedTools = getRelatedTools("termination-letter");
   const [companyName, setCompanyName] = useState("");
   const [employeeName, setEmployeeName] = useState("");
   const [employeeTitle, setEmployeeTitle] = useState("");
@@ -80,6 +83,10 @@ export default function TerminationLetterPage() {
       title="Termination Letter Generator"
       description="Generate a formal termination letter in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div>

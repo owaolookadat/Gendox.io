@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generatePurchaseOrder,
@@ -42,6 +43,8 @@ const emptyItem = (): POLineItem => ({
 });
 
 export default function PurchaseOrderPage() {
+  const seoData = getToolSeoContent("purchase-order");
+  const relatedTools = getRelatedTools("purchase-order");
   const [companyName, setCompanyName] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
   const [vendorName, setVendorName] = useState("");
@@ -124,6 +127,10 @@ export default function PurchaseOrderPage() {
       title="Purchase Order Generator"
       description="Create a professional purchase order online for free. Add line items and download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-gray-900">Your Company</h2>

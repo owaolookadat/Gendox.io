@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateExperienceCertificate,
@@ -17,6 +18,8 @@ function slugify(text: string): string {
 }
 
 export default function ExperienceCertificatePage() {
+  const seoData = getToolSeoContent("experience-certificate");
+  const relatedTools = getRelatedTools("experience-certificate");
   const [companyName, setCompanyName] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
   const [employeeName, setEmployeeName] = useState("");
@@ -66,6 +69,10 @@ export default function ExperienceCertificatePage() {
       title="Experience Certificate Generator"
       description="Create a formal experience/employment certificate in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateServiceAgreement,
@@ -25,6 +26,8 @@ function slugify(text: string): string {
 }
 
 export default function ServiceAgreementPage() {
+  const seoData = getToolSeoContent("service-agreement");
+  const relatedTools = getRelatedTools("service-agreement");
   const [providerName, setProviderName] = useState("");
   const [providerAddress, setProviderAddress] = useState("");
   const [clientName, setClientName] = useState("");
@@ -83,6 +86,10 @@ export default function ServiceAgreementPage() {
       title="Service Agreement Generator"
       description="Generate a professional service agreement in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import ToolShell from "@/components/ToolShell";
-import DownloadButton from "@/components/DownloadButton";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
+import DocumentPreview from "@/components/DocumentPreview";
+import { useDocumentFlow } from "@/hooks/useDocumentFlow";
 import {
   generateRentalAgreement,
   RentalAgreementData,
@@ -60,6 +62,10 @@ function RequiredDot() {
 }
 
 export default function RentalAgreementPage() {
+  const seoData = getToolSeoContent("rental-agreement");
+  const relatedTools = getRelatedTools("rental-agreement");
+  const { isEditing, isPreviewing, showPreview, goBackToEdit } = useDocumentFlow();
+
   // Landlord
   const [landlordName, setLandlordName] = useState("");
   const [landlordAddress, setLandlordAddress] = useState("");
@@ -144,12 +150,38 @@ export default function RentalAgreementPage() {
   const inputClass =
     "w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500";
 
+  const today = new Date().toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  const startDate = leaseStartDate
+    ? new Date(leaseStartDate + "T00:00:00").toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+  const endDate = leaseEndDate
+    ? new Date(leaseEndDate + "T00:00:00").toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+
   return (
     <ToolShell
       title="Rental Agreement Generator"
       description="Generate a professional rental/lease agreement in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
+      {isEditing && (
       <div className="space-y-2">
         {/* ── Landlord Details ── */}
         <SectionHeader>Landlord Details</SectionHeader>
@@ -475,13 +507,15 @@ export default function RentalAgreementPage() {
           </FieldHelper>
         </div>
 
-        {/* ── Download ── */}
+        {/* ── Generate Button ── */}
         <div className="pt-4">
-          <DownloadButton
-            onClick={handleDownload}
+          <button
+            onClick={showPreview}
             disabled={!isValid}
-            label="Download Rental Agreement"
-          />
+            className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
+          >
+            Generate Rental Agreement
+          </button>
         </div>
 
         {/* ── Legal Disclaimer ── */}
@@ -495,6 +529,55 @@ export default function RentalAgreementPage() {
           </p>
         </div>
       </div>
+      )}
+
+      {isPreviewing && (
+        <DocumentPreview documentTitle="Rental Agreement Preview" onDownload={handleDownload} onEdit={goBackToEdit}>
+          <div className="font-serif text-sm text-gray-800 leading-relaxed">
+            <h1 className="text-center font-bold text-base mb-1">RESIDENTIAL RENTAL AGREEMENT</h1>
+            <hr className="mb-4 border-gray-400" />
+
+            <p className="mb-3">This Rental Agreement is made on <strong>{today}</strong> between the following parties.</p>
+
+            {/* Key visible sections */}
+            <h2 className="font-bold mt-4 mb-2">1. PARTIES</h2>
+            <p className="mb-2 ml-4">Landlord: {landlordName}, {landlordAddress}</p>
+            <p className="mb-2 ml-4">Tenant: {tenantName}, {tenantAddress}</p>
+
+            <h2 className="font-bold mt-4 mb-2">2. PROPERTY</h2>
+            <p className="mb-2 ml-4">{propertyAddress} ({propertyType})</p>
+
+            <h2 className="font-bold mt-4 mb-2">3. TERM</h2>
+            <p className="mb-2 ml-4">{startDate} to {endDate}</p>
+
+            <h2 className="font-bold mt-4 mb-2">4. RENT</h2>
+            <p className="mb-2 ml-4">{currencySymbol}{Number(monthlyRent).toFixed(2)}/month, due on the {paymentDueDay}</p>
+
+            <h2 className="font-bold mt-4 mb-2">5. SECURITY DEPOSIT</h2>
+            <p className="mb-2 ml-4">{currencySymbol}{Number(securityDeposit).toFixed(2)}</p>
+
+            <p className="text-center text-xs text-gray-400 mt-4 italic">
+              ... Sections 6&ndash;13 (Utilities, Maintenance, Use of Property, Pet Policy, Entry, Termination, Additional Terms, Governing Law) included in download ...
+            </p>
+
+            {/* Signature blocks */}
+            <div className="mt-8 pt-4 border-t border-gray-300 grid grid-cols-2 gap-8">
+              <div>
+                <p className="font-bold mb-4">LANDLORD</p>
+                <div className="border-b border-gray-400 mb-1 h-8"></div>
+                <p className="text-xs text-gray-500">Signature</p>
+                <p className="mt-2 text-xs">Name: {landlordName}</p>
+              </div>
+              <div>
+                <p className="font-bold mb-4">TENANT</p>
+                <div className="border-b border-gray-400 mb-1 h-8"></div>
+                <p className="text-xs text-gray-500">Signature</p>
+                <p className="mt-2 text-xs">Name: {tenantName}</p>
+              </div>
+            </div>
+          </div>
+        </DocumentPreview>
+      )}
     </ToolShell>
   );
 }

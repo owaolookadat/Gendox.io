@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generateReferenceLetter,
@@ -19,6 +20,8 @@ function slugify(text: string): string {
 }
 
 export default function ReferenceLetterPage() {
+  const seoData = getToolSeoContent("reference-letter");
+  const relatedTools = getRelatedTools("reference-letter");
   const [referrerName, setReferrerName] = useState("");
   const [referrerTitle, setReferrerTitle] = useState("");
   const [referrerCompany, setReferrerCompany] = useState("");
@@ -69,6 +72,10 @@ export default function ReferenceLetterPage() {
       title="Reference Letter Generator"
       description="Generate a professional reference letter in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         {/* Referrer Info */}

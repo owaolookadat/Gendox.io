@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import { generateReceipt, ReceiptLineItem } from "@/lib/generators/receipt";
 import { saveAs } from "file-saver";
@@ -33,6 +34,8 @@ const emptyItem = (): ReceiptLineItem => ({
 });
 
 export default function ReceiptPage() {
+  const seoData = getToolSeoContent("receipt");
+  const relatedTools = getRelatedTools("receipt");
   const [businessName, setBusinessName] = useState("");
   const [businessAddress, setBusinessAddress] = useState("");
   const [customerName, setCustomerName] = useState("");
@@ -109,6 +112,10 @@ export default function ReceiptPage() {
       title="Receipt Generator"
       description="Create a professional receipt online for free. Add items and download as Word document."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-gray-900">Business Details</h2>

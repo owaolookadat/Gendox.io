@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DownloadButton from "@/components/DownloadButton";
 import {
   generatePayStub,
@@ -35,6 +36,8 @@ function getCurrencySymbol(currency: string): string {
 }
 
 export default function PayStubPage() {
+  const seoData = getToolSeoContent("pay-stub");
+  const relatedTools = getRelatedTools("pay-stub");
   const [companyName, setCompanyName] = useState("");
   const [employeeName, setEmployeeName] = useState("");
   const [employeeId, setEmployeeId] = useState("");
@@ -83,6 +86,10 @@ export default function PayStubPage() {
       title="Pay Stub Generator"
       description="Create a professional pay stub / payslip in seconds. Download as Word document instantly."
       category="Document Generator"
+      seoHeading={seoData.heading}
+      seoContent={seoData.content}
+      faqs={seoData.faqs}
+      relatedTools={relatedTools}
     >
       <div className="space-y-4">
         <div>
