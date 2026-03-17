@@ -15,6 +15,7 @@ import {
   Zap,
   ArrowUp,
   Search,
+  FileType,
 } from "lucide-react";
 
 interface Tool {
@@ -23,6 +24,8 @@ interface Tool {
   desc: string;
   keywords: string;
   expertCrafted?: boolean;
+  routePrefix?: string; // default: "/generators"
+  fileType?: string; // default: ".docx"
 }
 
 interface Category {
@@ -60,6 +63,28 @@ const categories: Category[] = [
       { title: "Resignation Letter Generator", slug: "resignation-letter", desc: "Generate a professional resignation letter with customizable tone.", keywords: "quit leaving job notice" },
       { title: "NDA Generator", slug: "nda", desc: "Create a mutual or one-way non-disclosure agreement.", keywords: "non-disclosure confidentiality secret" },
       { title: "Rental Agreement Generator", slug: "rental-agreement", desc: "Draft a complete rental/lease agreement with all key clauses.", keywords: "lease tenant landlord property rent" },
+    ],
+  },
+  {
+    name: "PDF Tools",
+    icon: <FileType className="w-5 h-5" />,
+    color: "text-red-600",
+    bgColor: "bg-red-50 border-red-200 hover:bg-red-100",
+    cardAccent: "hover:border-red-400",
+    id: "pdf-tools",
+    tools: [
+      { title: "Merge PDF", slug: "merge", desc: "Combine multiple PDF files into one document.", keywords: "combine join merge pdf", routePrefix: "/pdf-tools", fileType: ".pdf" },
+      { title: "Split PDF", slug: "split", desc: "Extract specific pages or ranges into a new PDF.", keywords: "split separate extract pages", routePrefix: "/pdf-tools", fileType: ".pdf" },
+      { title: "Rotate PDF", slug: "rotate", desc: "Rotate PDF pages individually or all at once.", keywords: "rotate turn flip pages", routePrefix: "/pdf-tools", fileType: ".pdf" },
+      { title: "Remove Pages", slug: "remove-pages", desc: "Remove unwanted pages from your PDF.", keywords: "delete remove pages", routePrefix: "/pdf-tools", fileType: ".pdf" },
+      { title: "Extract Pages", slug: "extract-pages", desc: "Extract specific pages from a PDF into a new file.", keywords: "extract pull pages", routePrefix: "/pdf-tools", fileType: ".pdf" },
+      { title: "Organize PDF", slug: "organize", desc: "Drag and drop to reorder pages in your PDF.", keywords: "reorder arrange organize sort", routePrefix: "/pdf-tools", fileType: ".pdf" },
+      { title: "JPG to PDF", slug: "jpg-to-pdf", desc: "Convert JPG and PNG images to a PDF document.", keywords: "image photo convert jpg png", routePrefix: "/pdf-tools", fileType: ".pdf" },
+      { title: "PDF to JPG", slug: "pdf-to-jpg", desc: "Convert each PDF page to a high-quality JPG image.", keywords: "convert export image jpg", routePrefix: "/pdf-tools", fileType: ".jpg" },
+      { title: "Add Page Numbers", slug: "add-page-numbers", desc: "Stamp page numbers on your PDF with custom position and format.", keywords: "number stamp footer header", routePrefix: "/pdf-tools", fileType: ".pdf" },
+      { title: "Add Watermark", slug: "add-watermark", desc: "Add a text watermark across all pages of your PDF.", keywords: "watermark stamp confidential draft", routePrefix: "/pdf-tools", fileType: ".pdf" },
+      { title: "Protect PDF", slug: "protect-pdf", desc: "Add password protection to your PDF file.", keywords: "password encrypt protect lock security", routePrefix: "/pdf-tools", fileType: ".pdf" },
+      { title: "Sign PDF", slug: "sign-pdf", desc: "Draw or type your signature and place it on your PDF.", keywords: "sign signature esign electronic", routePrefix: "/pdf-tools", fileType: ".pdf" },
     ],
   },
   {
@@ -222,7 +247,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2">
               <FileDown className="w-4 h-4 text-blue-200" />
-              <span>Download as .docx</span>
+              <span>Download as .docx & .pdf</span>
             </div>
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-purple-300" />
@@ -315,7 +340,7 @@ export default function Home() {
                 {category.tools.map((tool) => (
                   <Link
                     key={tool.slug}
-                    href={`/generators/${tool.slug}`}
+                    href={`${tool.routePrefix || "/generators"}/${tool.slug}`}
                     className={`bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md ${category.cardAccent} transition-all group flex flex-col relative`}
                   >
                     {/* Expert crafted badge */}
@@ -334,7 +359,7 @@ export default function Home() {
                         Use Tool &rarr;
                       </span>
                       <span className="text-xs text-gray-400 bg-gray-50 px-2 py-0.5 rounded-md font-mono">
-                        .docx
+                        {tool.fileType || ".docx"}
                       </span>
                     </div>
                   </Link>

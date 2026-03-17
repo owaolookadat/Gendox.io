@@ -44,6 +44,12 @@ export default function RootLayout({
                 About
               </Link>
               <Link
+                href="/pdf-tools/merge"
+                className="text-sm text-gray-600 hover:text-blue-600 transition-colors hidden sm:inline"
+              >
+                PDF Tools
+              </Link>
+              <Link
                 href="/calculators/profit-margin"
                 className="text-sm text-gray-600 hover:text-blue-600 transition-colors hidden sm:inline"
               >
@@ -64,7 +70,7 @@ export default function RootLayout({
 
         <footer className="border-t border-gray-200 bg-white mt-12">
           <div className="max-w-5xl mx-auto px-4 py-10">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-8 mb-8">
               {/* Brand */}
               <div>
                 <Link href="/" className="text-lg font-extrabold text-blue-600 flex items-center gap-2 mb-3" style={{ fontFamily: "'Manrope', sans-serif" }}>
@@ -75,20 +81,29 @@ export default function RootLayout({
                   gendox
                 </Link>
                 <p className="text-sm text-gray-500 leading-relaxed">
-                  Free online document generators. Create professional documents
-                  in seconds, no sign-up required.
+                  Free online tools &amp; document generators. No sign-up required.
                 </p>
               </div>
 
               {/* Popular Tools */}
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">Popular Tools</h3>
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">Document Tools</h3>
                 <ul className="space-y-2">
                   <li><Link href="/generators/resume" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Resume Generator</Link></li>
                   <li><Link href="/generators/invoice" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Invoice Generator</Link></li>
-                  <li><Link href="/generators/cover-letter" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Cover Letter Generator</Link></li>
-                  <li><Link href="/generators/resignation-letter" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Resignation Letter</Link></li>
+                  <li><Link href="/generators/cover-letter" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Cover Letter</Link></li>
                   <li><Link href="/generators/nda" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">NDA Generator</Link></li>
+                </ul>
+              </div>
+
+              {/* PDF Tools */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">PDF Tools</h3>
+                <ul className="space-y-2">
+                  <li><Link href="/pdf-tools/merge" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Merge PDF</Link></li>
+                  <li><Link href="/pdf-tools/split" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Split PDF</Link></li>
+                  <li><Link href="/pdf-tools/jpg-to-pdf" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">JPG to PDF</Link></li>
+                  <li><Link href="/pdf-tools/sign-pdf" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Sign PDF</Link></li>
                 </ul>
               </div>
 
