@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import ToolShell from "@/components/ToolShell";
 import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import DocumentPreview from "@/components/DocumentPreview";
 import { useDocumentFlow } from "@/hooks/useDocumentFlow";
+import { useAIGeneration } from "@/hooks/useAIGeneration";
 import {
   generateCoverLetter,
   generateCoverLetterText,
@@ -12,6 +13,7 @@ import {
   CoverLetterData,
   CoverLetterStyle,
 } from "@/lib/generators/cover-letter";
+import { generateAIDocx } from "@/lib/generators/ai-docx";
 import { saveAs } from "file-saver";
 
 function slugify(text: string): string {
@@ -87,6 +89,7 @@ export default function CoverLetterPage() {
   const seoData = getToolSeoContent("cover-letter");
   const relatedTools = getRelatedTools("cover-letter");
   const { isEditing, isPreviewing, showPreview, goBackToEdit } = useDocumentFlow();
+  const { aiContent, isGenerating, error: aiError, generate, clearAI } = useAIGeneration();
 
   const [formData, setFormData] = useState<CoverLetterData>({
     yourName: "",
@@ -120,11 +123,75 @@ export default function CoverLetterPage() {
     formData.jobTitle.trim() &&
     formData.yearsExperience.trim();
 
+  // Track whether we attempted AI generation, so we can auto-fallback on 503
+  const [aiAttempted, setAiAttempted] = useState(false);
+  const wasGenerating = useRef(false);
+
+  // When generation finishes (isGenerating transitions false) with no content and no error,
+  // it means 503 / AI not configured — silently fall back to template preview.
+  useEffect(() => {
+    if (wasGenerating.current && !isGenerating && aiAttempted) {
+      if (aiContent) {
+        // AI succeeded — show preview (already handled in handleGenerate)
+      } else if (!aiError) {
+        // 503 / not configured — fall back to template
+        clearAI();
+        showPreview();
+      }
+      // If aiError is set, user stays on form and sees error + fallback button
+      setAiAttempted(false);
+    }
+    wasGenerating.current = isGenerating;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isGenerating]);
+
+  const handleGenerate = async () => {
+    setAiAttempted(true);
+    const result = await generate("cover-letter", formData as unknown as Record<string, unknown>);
+    if (result) {
+      // AI content returned — show preview with AI content
+      showPreview();
+    }
+    // If null, the useEffect above handles fallback vs error display
+  };
+
+  const handleTemplateFallback = () => {
+    clearAI();
+    showPreview();
+  };
+
   const handleDownload = async () => {
-    const blob = await generateCoverLetter(formData);
     const company = slugify(formData.companyName) || "company";
     const job = slugify(formData.jobTitle) || "position";
-    saveAs(blob, `cover-letter-${company}-${job}.docx`);
+
+    if (aiContent) {
+      const senderBlock: string[] = [formData.yourName];
+      if (formData.yourEmail.trim()) senderBlock.push(formData.yourEmail.trim());
+      if (formData.yourPhone.trim()) senderBlock.push(formData.yourPhone.trim());
+      if (formData.location.trim()) senderBlock.push(formData.location.trim());
+
+      const recipientBlock: string[] = [];
+      if (formData.recipientName.trim()) recipientBlock.push(formData.recipientName.trim());
+      if (formData.recipientTitle.trim()) recipientBlock.push(formData.recipientTitle.trim());
+      if (formData.companyName.trim()) recipientBlock.push(formData.companyName.trim());
+      if (formData.companyAddress.trim()) {
+        formData.companyAddress.trim().split("\n").forEach((l) => recipientBlock.push(l));
+      }
+
+      const blob = await generateAIDocx({
+        content: aiContent,
+        senderBlock,
+        recipientBlock,
+        date: today,
+        salutation: `Dear ${salutationName},`,
+        signOff: previewText.signOff,
+        signatureName: formData.yourName,
+      });
+      saveAs(blob, `cover-letter-${company}-${job}.docx`);
+    } else {
+      const blob = await generateCoverLetter(formData);
+      saveAs(blob, `cover-letter-${company}-${job}.docx`);
+    }
   };
 
   const today = new Date().toLocaleDateString("en-GB", {
@@ -406,12 +473,51 @@ export default function CoverLetterPage() {
 
           {/* -- Generate Button -- */}
           <button
-            onClick={showPreview}
-            disabled={!isValid}
-            className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
+            onClick={handleGenerate}
+            disabled={!isValid || isGenerating}
+            className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:bg-gray-400 transition-colors flex items-center justify-center gap-2"
           >
-            Generate Cover Letter
+            {isGenerating ? (
+              <>
+                <svg
+                  className="animate-spin h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
+                Generating...
+              </>
+            ) : (
+              "Generate Cover Letter"
+            )}
           </button>
+
+          {aiError && (
+            <div className="space-y-2">
+              <p className="text-sm text-red-600">{aiError}</p>
+              <button
+                onClick={handleTemplateFallback}
+                disabled={!isValid}
+                className="w-full px-4 py-3 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700 disabled:bg-gray-400 transition-colors"
+              >
+                Generate with Template
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -459,11 +565,20 @@ export default function CoverLetterPage() {
             <p className="mb-4">Dear {salutationName},</p>
 
             {/* Body paragraphs */}
-            {generateCoverLetterParagraphs(formData).map((p, i) => (
-              <p key={i} className="mb-4">
-                {p}
-              </p>
-            ))}
+            {aiContent
+              ? aiContent
+                  .split(/\n\n+/)
+                  .filter(Boolean)
+                  .map((p, i) => (
+                    <p key={i} className="mb-4">
+                      {p}
+                    </p>
+                  ))
+              : generateCoverLetterParagraphs(formData).map((p, i) => (
+                  <p key={i} className="mb-4">
+                    {p}
+                  </p>
+                ))}
 
             {/* Sign-off */}
             <p className="mb-1">{previewText.signOff}</p>
