@@ -52,6 +52,7 @@ export interface ResumePreviewData {
   style: string;
   fullName: string;
   contactLine: string;
+  contactParts: string[];
   summary?: string;
   experience: {
     title: string;
@@ -68,7 +69,9 @@ export interface ResumePreviewData {
     grade?: string;
   }[];
   skills?: string;
+  skillItems: string[];
   certifications?: string;
+  certificationItems: string[];
   languages?: string;
   hobbies?: string;
 }
@@ -228,10 +231,29 @@ export function generateResumePreviewData(data: ResumeData): ResumePreviewData {
     (e) => e.institution.trim() || e.degree.trim()
   );
 
+  const skillItems = data.skills
+    .split(/[,;\n]/)
+    .map((s) => s.trim())
+    .filter((s) => s);
+
+  const certificationItems = data.certifications
+    .split("\n")
+    .map((l) => l.trim())
+    .filter((l) => l)
+    .map((l) => l.replace(/^[\u2022\-\*]\s*/, ""));
+
+  const contactParts: string[] = [];
+  if (data.email) contactParts.push(data.email);
+  if (data.phone) contactParts.push(data.phone);
+  if (data.location) contactParts.push(data.location);
+  if (data.linkedin) contactParts.push(data.linkedin);
+  if (data.website) contactParts.push(data.website);
+
   return {
     style: data.style,
     fullName: data.fullName,
     contactLine: buildContactLine(data),
+    contactParts,
     summary: data.professionalSummary.trim() || undefined,
     experience: validExperience.map((exp) => {
       const dateRange = exp.current
@@ -258,7 +280,9 @@ export function generateResumePreviewData(data: ResumeData): ResumePreviewData {
       grade: edu.grade || undefined,
     })),
     skills: data.skills.trim() || undefined,
+    skillItems,
     certifications: data.certifications.trim() || undefined,
+    certificationItems,
     languages: data.languages.trim() || undefined,
     hobbies: data.hobbies.trim() || undefined,
   };
@@ -453,7 +477,7 @@ export async function generateResume(data: ResumeData): Promise<Blob> {
           spacing: { before: index > 0 ? 120 : 40, after: 20 },
           children: [
             new TextRun({
-              text: degreeLine || "Degree",
+              text: degreeLine || edu.institution || "Education",
               bold: true,
               size: config.bodySize,
               font: FONT,
@@ -498,19 +522,55 @@ export async function generateResume(data: ResumeData): Promise<Blob> {
   // --- Skills ---
   if (data.skills.trim()) {
     paragraphs.push(sectionHeading("Skills", config));
-    paragraphs.push(
-      new Paragraph({
-        spacing: { after: config.bodySpacingAfter },
-        children: [
+    // Split skills by comma, semicolon, or newline and render as a clean inline list
+    const skillItems = data.skills
+      .split(/[,;\n]/)
+      .map((s) => s.trim())
+      .filter((s) => s);
+    if (skillItems.length > 1) {
+      // Render as formatted inline list with bullet separators
+      const runs: TextRun[] = [];
+      skillItems.forEach((skill, i) => {
+        if (i > 0) {
+          runs.push(
+            new TextRun({
+              text: "  \u2022  ",
+              size: config.bodySize,
+              font: FONT,
+              color: "999999",
+            })
+          );
+        }
+        runs.push(
           new TextRun({
-            text: data.skills.trim(),
+            text: skill,
             size: config.bodySize,
             font: FONT,
             color: config.bodyColor,
-          }),
-        ],
-      })
-    );
+          })
+        );
+      });
+      paragraphs.push(
+        new Paragraph({
+          spacing: { after: config.bodySpacingAfter },
+          children: runs,
+        })
+      );
+    } else {
+      paragraphs.push(
+        new Paragraph({
+          spacing: { after: config.bodySpacingAfter },
+          children: [
+            new TextRun({
+              text: data.skills.trim(),
+              size: config.bodySize,
+              font: FONT,
+              color: config.bodyColor,
+            }),
+          ],
+        })
+      );
+    }
   }
 
   // --- Certifications (optional) ---

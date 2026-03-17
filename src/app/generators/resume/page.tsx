@@ -32,21 +32,25 @@ const styleOptions: {
   value: ResumeStyle;
   label: string;
   description: string;
+  icon: string;
 }[] = [
   {
     value: "classic",
     label: "Classic",
     description: "Traditional centered layout with clear section dividers",
+    icon: "≡",
   },
   {
     value: "modern",
     label: "Modern",
     description: "Contemporary design with blue accents and clean typography",
+    icon: "◧",
   },
   {
     value: "minimal",
     label: "Minimal",
     description: "Dense, space-efficient layout that fits more on one page",
+    icon: "▭",
   },
 ];
 
@@ -80,7 +84,85 @@ function blankEducation(): Education {
   };
 }
 
-// --- Preview renderer ---
+// --- Shared preview sub-components ---
+
+function SkillPills({ items, accentColor }: { items: string[]; accentColor?: string }) {
+  if (items.length === 0) return null;
+  return (
+    <div className="flex flex-wrap gap-1.5 mt-1">
+      {items.map((skill, i) => (
+        <span
+          key={i}
+          className={`inline-block px-2 py-0.5 text-xs rounded-full border ${
+            accentColor === "blue"
+              ? "bg-blue-50 text-blue-700 border-blue-200"
+              : "bg-gray-100 text-gray-700 border-gray-200"
+          }`}
+        >
+          {skill}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function CertificationList({ items }: { items: string[] }) {
+  if (items.length === 0) return null;
+  return (
+    <ul className="list-disc list-inside mt-1 space-y-0.5">
+      {items.map((cert, i) => (
+        <li key={i} className="text-xs text-gray-700">
+          {cert}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ContactLine({ parts, align }: { parts: string[]; align: "center" | "left" }) {
+  if (parts.length === 0) return null;
+  return (
+    <div className={`flex flex-wrap gap-x-1 gap-y-0.5 mt-1 ${align === "center" ? "justify-center" : "justify-start"}`}>
+      {parts.map((part, i) => (
+        <span key={i} className="text-xs text-gray-500 whitespace-nowrap">
+          {i > 0 && <span className="text-gray-300 mr-1">|</span>}
+          {part}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function EducationEntry({ edu, accentColor }: { edu: ResumePreviewData["education"][0]; accentColor?: string }) {
+  const degreeLine = [edu.degree, edu.field].filter(Boolean).join(" in ");
+  if (!degreeLine && !edu.institution) return null;
+  return (
+    <div>
+      <p className="text-xs">
+        {degreeLine && (
+          <span className={`font-bold ${accentColor === "blue" ? "text-blue-600" : "text-gray-900"}`}>
+            {degreeLine}
+          </span>
+        )}
+        {edu.institution && (
+          <span className="text-gray-700">
+            {degreeLine ? " — " : ""}
+            {edu.institution}
+          </span>
+        )}
+      </p>
+      {(edu.dates || edu.grade) && (
+        <p className="text-xs text-gray-500 italic">
+          {[edu.dates, edu.grade ? `Grade: ${edu.grade}` : ""]
+            .filter(Boolean)
+            .join("  |  ")}
+        </p>
+      )}
+    </div>
+  );
+}
+
+// --- Preview renderers ---
 
 function ResumePreviewContent({
   preview,
@@ -102,11 +184,7 @@ function ClassicPreview({ preview }: { preview: ResumePreviewData }) {
       <h1 className="text-center text-lg font-bold text-gray-900">
         {preview.fullName}
       </h1>
-      {preview.contactLine && (
-        <p className="text-center text-xs text-gray-500 mt-1">
-          {preview.contactLine}
-        </p>
-      )}
+      <ContactLine parts={preview.contactParts} align="center" />
       <hr className="my-3 border-gray-800" />
 
       {preview.summary && (
@@ -164,45 +242,27 @@ function ClassicPreview({ preview }: { preview: ResumePreviewData }) {
           </h2>
           {preview.education.map((edu, i) => (
             <div key={i} className={i > 0 ? "mt-2" : ""}>
-              <p className="text-xs">
-                <span className="font-bold text-gray-900">
-                  {[edu.degree, edu.field].filter(Boolean).join(" in ") ||
-                    "Degree"}
-                </span>
-                {edu.institution && (
-                  <span className="text-gray-700">
-                    {" "}
-                    &mdash; {edu.institution}
-                  </span>
-                )}
-              </p>
-              {(edu.dates || edu.grade) && (
-                <p className="text-xs text-gray-500 italic">
-                  {[edu.dates, edu.grade ? `Grade: ${edu.grade}` : ""]
-                    .filter(Boolean)
-                    .join("  |  ")}
-                </p>
-              )}
+              <EducationEntry edu={edu} />
             </div>
           ))}
         </>
       )}
 
-      {preview.skills && (
+      {preview.skillItems.length > 0 && (
         <>
           <h2 className="uppercase font-bold text-xs tracking-wider border-b border-gray-800 pb-1 mt-4 mb-2 text-gray-900">
             Skills
           </h2>
-          <p className="text-xs text-gray-700">{preview.skills}</p>
+          <SkillPills items={preview.skillItems} />
         </>
       )}
 
-      {preview.certifications && (
+      {preview.certificationItems.length > 0 && (
         <>
           <h2 className="uppercase font-bold text-xs tracking-wider border-b border-gray-800 pb-1 mt-4 mb-2 text-gray-900">
             Certifications
           </h2>
-          <p className="text-xs text-gray-700">{preview.certifications}</p>
+          <CertificationList items={preview.certificationItems} />
         </>
       )}
 
@@ -233,11 +293,7 @@ function ModernPreview({ preview }: { preview: ResumePreviewData }) {
       <h1 className="text-left text-xl font-bold text-blue-600">
         {preview.fullName}
       </h1>
-      {preview.contactLine && (
-        <p className="text-left text-xs text-gray-500 mt-1">
-          {preview.contactLine}
-        </p>
-      )}
+      <ContactLine parts={preview.contactParts} align="left" />
 
       {preview.summary && (
         <>
@@ -292,45 +348,27 @@ function ModernPreview({ preview }: { preview: ResumePreviewData }) {
           </h2>
           {preview.education.map((edu, i) => (
             <div key={i} className={i > 0 ? "mt-2" : ""}>
-              <p className="text-xs">
-                <span className="font-bold text-blue-600">
-                  {[edu.degree, edu.field].filter(Boolean).join(" in ") ||
-                    "Degree"}
-                </span>
-                {edu.institution && (
-                  <span className="text-gray-700">
-                    {" "}
-                    &mdash; {edu.institution}
-                  </span>
-                )}
-              </p>
-              {(edu.dates || edu.grade) && (
-                <p className="text-xs text-gray-500 italic">
-                  {[edu.dates, edu.grade ? `Grade: ${edu.grade}` : ""]
-                    .filter(Boolean)
-                    .join("  |  ")}
-                </p>
-              )}
+              <EducationEntry edu={edu} accentColor="blue" />
             </div>
           ))}
         </>
       )}
 
-      {preview.skills && (
+      {preview.skillItems.length > 0 && (
         <>
           <h2 className="uppercase font-bold text-xs tracking-wider text-blue-600 border-b border-blue-300 pb-1 mt-5 mb-2">
             Skills
           </h2>
-          <p className="text-xs text-gray-700">{preview.skills}</p>
+          <SkillPills items={preview.skillItems} accentColor="blue" />
         </>
       )}
 
-      {preview.certifications && (
+      {preview.certificationItems.length > 0 && (
         <>
           <h2 className="uppercase font-bold text-xs tracking-wider text-blue-600 border-b border-blue-300 pb-1 mt-5 mb-2">
             Certifications
           </h2>
-          <p className="text-xs text-gray-700">{preview.certifications}</p>
+          <CertificationList items={preview.certificationItems} />
         </>
       )}
 
@@ -361,11 +399,7 @@ function MinimalPreview({ preview }: { preview: ResumePreviewData }) {
       <h1 className="text-left text-base font-bold text-gray-900">
         {preview.fullName}
       </h1>
-      {preview.contactLine && (
-        <p className="text-left text-xs text-gray-400 mt-0.5">
-          {preview.contactLine}
-        </p>
-      )}
+      <ContactLine parts={preview.contactParts} align="left" />
 
       {preview.summary && (
         <>
@@ -420,45 +454,27 @@ function MinimalPreview({ preview }: { preview: ResumePreviewData }) {
           </h2>
           {preview.education.map((edu, i) => (
             <div key={i} className={i > 0 ? "mt-1.5" : ""}>
-              <p className="text-xs">
-                <span className="font-bold text-gray-900">
-                  {[edu.degree, edu.field].filter(Boolean).join(" in ") ||
-                    "Degree"}
-                </span>
-                {edu.institution && (
-                  <span className="text-gray-700">
-                    {" "}
-                    &mdash; {edu.institution}
-                  </span>
-                )}
-              </p>
-              {(edu.dates || edu.grade) && (
-                <p className="text-xs text-gray-500 italic">
-                  {[edu.dates, edu.grade ? `Grade: ${edu.grade}` : ""]
-                    .filter(Boolean)
-                    .join("  |  ")}
-                </p>
-              )}
+              <EducationEntry edu={edu} />
             </div>
           ))}
         </>
       )}
 
-      {preview.skills && (
+      {preview.skillItems.length > 0 && (
         <>
           <h2 className="uppercase font-bold text-xs tracking-wider mt-4 mb-1 text-gray-900">
             Skills
           </h2>
-          <p className="text-xs text-gray-700">{preview.skills}</p>
+          <SkillPills items={preview.skillItems} />
         </>
       )}
 
-      {preview.certifications && (
+      {preview.certificationItems.length > 0 && (
         <>
           <h2 className="uppercase font-bold text-xs tracking-wider mt-4 mb-1 text-gray-900">
             Certifications
           </h2>
-          <p className="text-xs text-gray-700">{preview.certifications}</p>
+          <CertificationList items={preview.certificationItems} />
         </>
       )}
 
@@ -526,6 +542,21 @@ export default function ResumePage() {
 
   const isValid = fullName.trim().length > 0;
 
+  // Check if key sections are empty for warning
+  const hasExperienceContent = experience.some(
+    (e) => e.title.trim() || e.company.trim()
+  );
+  const hasEducationContent = education.some(
+    (e) => e.institution.trim() || e.degree.trim()
+  );
+  const hasSkillsContent = skills.trim().length > 0;
+  const missingSections = [
+    !hasExperienceContent && "Work Experience",
+    !hasEducationContent && "Education",
+    !hasSkillsContent && "Skills",
+    !professionalSummary.trim() && "Professional Summary",
+  ].filter(Boolean) as string[];
+
   const updateExperience = (
     index: number,
     field: keyof Experience,
@@ -545,9 +576,10 @@ export default function ResumePage() {
   };
 
   const removeExperience = (index: number) => {
-    if (experience.length > 1) {
-      setExperience((prev) => prev.filter((_, i) => i !== index));
-    }
+    setExperience((prev) => {
+      if (prev.length <= 1) return [blankExperience()];
+      return prev.filter((_, i) => i !== index);
+    });
   };
 
   const updateEducation = (
@@ -569,9 +601,10 @@ export default function ResumePage() {
   };
 
   const removeEducation = (index: number) => {
-    if (education.length > 1) {
-      setEducation((prev) => prev.filter((_, i) => i !== index));
-    }
+    setEducation((prev) => {
+      if (prev.length <= 1) return [blankEducation()];
+      return prev.filter((_, i) => i !== index);
+    });
   };
 
   const buildFormData = (): ResumeData => ({
@@ -612,6 +645,9 @@ export default function ResumePage() {
   const sectionHeaderClass =
     "text-lg font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4";
 
+  const styleLabel =
+    style === "classic" ? "Classic" : style === "modern" ? "Modern" : "Minimal";
+
   return (
     <ToolShell
       title="Resume / CV Generator"
@@ -625,6 +661,19 @@ export default function ResumePage() {
       {/* ── Editing Mode ── */}
       {isEditing && (
         <div className="space-y-6">
+          {/* ── ATS Badge ── */}
+          <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 flex items-start gap-3">
+            <svg className="w-5 h-5 text-green-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p className="text-sm font-medium text-green-800">ATS-Friendly Format</p>
+              <p className="text-xs text-green-700 mt-0.5">
+                All resume styles use clean formatting that passes Applicant Tracking Systems. No tables, columns, or graphics that confuse ATS parsers.
+              </p>
+            </div>
+          </div>
+
           {/* ── Style Selector ── */}
           <div>
             <h2 className={sectionHeaderClass}>Resume Style</h2>
@@ -640,9 +689,12 @@ export default function ResumePage() {
                       : "border-gray-300 bg-white hover:border-gray-400"
                   }`}
                 >
-                  <span className="block text-sm font-medium text-gray-900">
-                    {opt.label}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg text-gray-400">{opt.icon}</span>
+                    <span className="block text-sm font-medium text-gray-900">
+                      {opt.label}
+                    </span>
+                  </div>
                   <span className="block text-xs text-gray-500 mt-0.5">
                     {opt.description}
                   </span>
@@ -775,15 +827,13 @@ export default function ResumePage() {
                     <span className="text-sm font-medium text-gray-500">
                       Experience {index + 1}
                     </span>
-                    {experience.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeExperience(index)}
-                        className="text-sm text-red-500 hover:text-red-700"
-                      >
-                        Remove
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeExperience(index)}
+                      className="text-sm text-red-500 hover:text-red-700"
+                    >
+                      {experience.length > 1 ? "Remove" : "Clear"}
+                    </button>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
@@ -907,15 +957,13 @@ export default function ResumePage() {
                     <span className="text-sm font-medium text-gray-500">
                       Education {index + 1}
                     </span>
-                    {education.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeEducation(index)}
-                        className="text-sm text-red-500 hover:text-red-700"
-                      >
-                        Remove
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeEducation(index)}
+                      className="text-sm text-red-500 hover:text-red-700"
+                    >
+                      {education.length > 1 ? "Remove" : "Clear"}
+                    </button>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
@@ -1034,6 +1082,9 @@ export default function ResumePage() {
                 rows={3}
                 className={inputClass}
               />
+              <p className="text-xs text-gray-400 mt-1">
+                Separate skills with commas. They&apos;ll appear as individual tags.
+              </p>
             </div>
           </div>
 
@@ -1093,11 +1144,26 @@ export default function ResumePage() {
             </div>
           </div>
 
+          {/* ── Missing sections warning ── */}
+          {isValid && missingSections.length > 0 && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 flex items-start gap-3">
+              <svg className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+              <div>
+                <p className="text-sm font-medium text-amber-800">Missing sections</p>
+                <p className="text-xs text-amber-700 mt-0.5">
+                  Your resume is missing: {missingSections.join(", ")}. You can still generate, but filling these will create a stronger resume.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* ── Generate Button ── */}
           <button
             onClick={handleGeneratePreview}
             disabled={!isValid}
-            className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 px-4 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
           >
             <svg
               className="w-4 h-4"
@@ -1118,7 +1184,7 @@ export default function ResumePage() {
                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
               />
             </svg>
-            Generate Resume
+            Preview Resume
           </button>
         </div>
       )}
@@ -1128,7 +1194,7 @@ export default function ResumePage() {
         <DocumentPreview
           onDownload={handleDownload}
           onEdit={goBackToEdit}
-          documentTitle="Resume Preview"
+          documentTitle={`Resume Preview — ${styleLabel} Style`}
         >
           <ResumePreviewContent preview={previewData} />
         </DocumentPreview>
