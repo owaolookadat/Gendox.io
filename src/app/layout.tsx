@@ -18,13 +18,39 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col font-sans">
+      <body className="min-h-screen flex flex-col font-sans bg-gray-50">
         <JsonLd data={getHomePageJsonLd()} />
-        <nav className="border-b border-gray-200 bg-white">
+
+        {/* Sticky nav */}
+        <nav className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold text-blue-600">
+            <Link href="/" className="text-xl font-bold text-blue-600 flex items-center gap-2">
+              <svg className="w-7 h-7" viewBox="0 0 28 28" fill="none">
+                <rect width="28" height="28" rx="6" fill="#2563EB" />
+                <path d="M8 9h12M8 14h8M8 19h10" stroke="white" strokeWidth="2" strokeLinecap="round" />
+              </svg>
               Gendox
             </Link>
+            <div className="flex items-center gap-4">
+              <Link
+                href="/about"
+                className="text-sm text-gray-600 hover:text-blue-600 transition-colors hidden sm:inline"
+              >
+                About
+              </Link>
+              <Link
+                href="/calculators/profit-margin"
+                className="text-sm text-gray-600 hover:text-blue-600 transition-colors hidden sm:inline"
+              >
+                Calculators
+              </Link>
+              <Link
+                href="/"
+                className="text-sm font-medium text-white bg-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                All Tools
+              </Link>
+            </div>
           </div>
         </nav>
 
@@ -32,16 +58,49 @@ export default function RootLayout({
         <Analytics />
 
         <footer className="border-t border-gray-200 bg-white mt-12">
-          <div className="max-w-5xl mx-auto px-4 py-6 text-center text-sm text-gray-400">
-            &copy; {new Date().getFullYear()} Gendox &mdash; Free Online Tools
-            <span className="mx-2">|</span>
-            <a href="#" className="hover:text-gray-600">
-              About
-            </a>
-            <span className="mx-2">|</span>
-            <a href="#" className="hover:text-gray-600">
-              Privacy Policy
-            </a>
+          <div className="max-w-5xl mx-auto px-4 py-10">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
+              {/* Brand */}
+              <div>
+                <Link href="/" className="text-lg font-bold text-blue-600 flex items-center gap-2 mb-3">
+                  <svg className="w-6 h-6" viewBox="0 0 28 28" fill="none">
+                    <rect width="28" height="28" rx="6" fill="#2563EB" />
+                    <path d="M8 9h12M8 14h8M8 19h10" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                  Gendox
+                </Link>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  Free online document generators. Create professional documents
+                  in seconds, no sign-up required.
+                </p>
+              </div>
+
+              {/* Popular Tools */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">Popular Tools</h3>
+                <ul className="space-y-2">
+                  <li><Link href="/generators/resume" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Resume Generator</Link></li>
+                  <li><Link href="/generators/invoice" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Invoice Generator</Link></li>
+                  <li><Link href="/generators/cover-letter" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Cover Letter Generator</Link></li>
+                  <li><Link href="/generators/resignation-letter" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Resignation Letter</Link></li>
+                  <li><Link href="/generators/nda" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">NDA Generator</Link></li>
+                </ul>
+              </div>
+
+              {/* Links */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">Resources</h3>
+                <ul className="space-y-2">
+                  <li><Link href="/about" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">About Gendox</Link></li>
+                  <li><Link href="/privacy" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Privacy Policy</Link></li>
+                  <li><Link href="/calculators/profit-margin" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Profit Margin Calculator</Link></li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-200 pt-6 text-center text-sm text-gray-400">
+              &copy; {new Date().getFullYear()} Gendox &mdash; Free Online Tools &amp; Document Generators
+            </div>
           </div>
         </footer>
       </body>

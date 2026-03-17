@@ -136,6 +136,7 @@ export default function BusinessProposalPage() {
       seoContent={seoData.content}
       faqs={seoData.faqs}
       relatedTools={relatedTools}
+      aiPowered
     >
       {isEditing && (
         <div className="space-y-4">

@@ -141,6 +141,7 @@ export default function RecommendationLetterPage() {
       seoContent={seoData.content}
       faqs={seoData.faqs}
       relatedTools={relatedTools}
+      aiPowered
     >
       {isEditing && (
         <div className="space-y-4">

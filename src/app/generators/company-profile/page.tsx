@@ -110,6 +110,7 @@ export default function CompanyProfilePage() {
       seoContent={seoData.content}
       faqs={seoData.faqs}
       relatedTools={relatedTools}
+      aiPowered
     >
       {isEditing && (
         <div className="space-y-4">

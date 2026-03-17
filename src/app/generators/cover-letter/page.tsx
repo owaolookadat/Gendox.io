@@ -218,6 +218,7 @@ export default function CoverLetterPage() {
       seoContent={seoData.content}
       faqs={seoData.faqs}
       relatedTools={relatedTools}
+      aiPowered
     >
       {isEditing && (
         <div className="space-y-5">
