@@ -3,8 +3,8 @@ export function getToolJsonLd(
   title: string,
   description: string
 ): Record<string, unknown> {
-  // Strip "| Gendox" suffix from the title
-  const cleanTitle = title.replace(/\s*\|\s*Gendox\s*$/, "");
+  // Strip "| gendox" suffix from the title
+  const cleanTitle = title.replace(/\s*\|\s*gendox\s*$/, "");
 
   return {
     "@context": "https://schema.org",
@@ -21,7 +21,7 @@ export function getToolJsonLd(
     },
     provider: {
       "@type": "Organization",
-      name: "Gendox",
+      name: "gendox",
       url: "https://gendox.io",
     },
   };
@@ -46,7 +46,7 @@ export function getHomePageJsonLd(): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Gendox",
+    name: "gendox",
     url: "https://gendox.io",
     description:
       "Free online document generators. Create professional documents instantly, no sign-up required.",

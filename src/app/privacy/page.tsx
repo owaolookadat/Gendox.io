@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Gendox",
+  title: "Privacy Policy — gendox",
   description:
-    "Gendox privacy policy. Learn how we handle your data when you use our free document generators.",
+    "gendox privacy policy. Learn how we handle your data when you use our free document generators.",
 };
 
 export default function PrivacyPage() {
@@ -22,7 +22,7 @@ export default function PrivacyPage() {
       <div className="prose prose-gray max-w-none space-y-5 text-gray-600 leading-relaxed">
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">Overview</h2>
         <p>
-          Gendox (&quot;we&quot;, &quot;our&quot;, &quot;us&quot;) is committed to
+          gendox (&quot;we&quot;, &quot;our&quot;, &quot;us&quot;) is committed to
           protecting your privacy. This policy explains how we handle information
           when you use our website at gendox.io.
         </p>

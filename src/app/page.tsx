@@ -233,18 +233,18 @@ export default function Home() {
           {/* Search — inside hero */}
           <div className="max-w-xl mx-auto">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-200" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search tools... e.g. invoice, resignation, NDA"
-                className="w-full pl-12 pr-10 py-4 rounded-xl text-gray-900 text-base shadow-lg border-0 focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                className="w-full pl-12 pr-10 py-3.5 rounded-xl text-white text-base bg-white/15 backdrop-blur-sm border border-white/25 placeholder-blue-200/70 focus:bg-white/20 focus:ring-2 focus:ring-white/30 focus:border-white/40 focus:outline-none transition-all"
               />
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-200 hover:text-white"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

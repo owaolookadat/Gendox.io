@@ -6,7 +6,7 @@ import JsonLd from "@/components/JsonLd";
 import { getHomePageJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Gendox — Free Online Tools & Document Generators",
+  title: "gendox — Free Online Tools & Document Generators",
   description:
     "Free online document generators, calculators, and converters. No sign-up required. Instant download.",
 };
@@ -18,18 +18,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@800&display=swap" rel="stylesheet" />
+      </head>
       <body className="min-h-screen flex flex-col font-sans bg-gray-50">
         <JsonLd data={getHomePageJsonLd()} />
 
         {/* Sticky nav */}
         <nav className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold text-blue-600 flex items-center gap-2">
+            <Link href="/" className="text-xl font-extrabold text-blue-600 flex items-center gap-2" style={{ fontFamily: "'Manrope', sans-serif" }}>
               <svg className="w-7 h-7" viewBox="0 0 28 28" fill="none">
                 <rect width="28" height="28" rx="6" fill="#2563EB" />
                 <path d="M8 9h12M8 14h8M8 19h10" stroke="white" strokeWidth="2" strokeLinecap="round" />
               </svg>
-              Gendox
+              gendox
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -62,12 +67,12 @@ export default function RootLayout({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
               {/* Brand */}
               <div>
-                <Link href="/" className="text-lg font-bold text-blue-600 flex items-center gap-2 mb-3">
+                <Link href="/" className="text-lg font-extrabold text-blue-600 flex items-center gap-2 mb-3" style={{ fontFamily: "'Manrope', sans-serif" }}>
                   <svg className="w-6 h-6" viewBox="0 0 28 28" fill="none">
                     <rect width="28" height="28" rx="6" fill="#2563EB" />
                     <path d="M8 9h12M8 14h8M8 19h10" stroke="white" strokeWidth="2" strokeLinecap="round" />
                   </svg>
-                  Gendox
+                  gendox
                 </Link>
                 <p className="text-sm text-gray-500 leading-relaxed">
                   Free online document generators. Create professional documents
@@ -91,7 +96,7 @@ export default function RootLayout({
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 mb-3">Resources</h3>
                 <ul className="space-y-2">
-                  <li><Link href="/about" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">About Gendox</Link></li>
+                  <li><Link href="/about" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">About gendox</Link></li>
                   <li><Link href="/privacy" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Privacy Policy</Link></li>
                   <li><Link href="/calculators/profit-margin" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">Profit Margin Calculator</Link></li>
                 </ul>
@@ -99,7 +104,7 @@ export default function RootLayout({
             </div>
 
             <div className="border-t border-gray-200 pt-6 text-center text-sm text-gray-400">
-              &copy; {new Date().getFullYear()} Gendox &mdash; Free Online Tools &amp; Document Generators
+              &copy; {new Date().getFullYear()} gendox &mdash; Free Online Tools &amp; Document Generators
             </div>
           </div>
         </footer>
