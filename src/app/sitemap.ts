@@ -9,6 +9,10 @@ const highPriorityRoutes = [
   "/generators/resignation-letter",
   "/generators/nda",
   "/generators/rental-agreement",
+  "/pdf-tools/merge",
+  "/pdf-tools/split",
+  "/pdf-tools/jpg-to-pdf",
+  "/pdf-tools/pdf-to-jpg",
 ];
 
 const allGeneratorRoutes = [
@@ -65,6 +69,21 @@ const allGeneratorRoutes = [
   "/generators/award-certificate",
 ];
 
+const allPdfToolRoutes = [
+  "/pdf-tools/merge",
+  "/pdf-tools/split",
+  "/pdf-tools/rotate",
+  "/pdf-tools/remove-pages",
+  "/pdf-tools/extract-pages",
+  "/pdf-tools/organize",
+  "/pdf-tools/jpg-to-pdf",
+  "/pdf-tools/pdf-to-jpg",
+  "/pdf-tools/add-page-numbers",
+  "/pdf-tools/add-watermark",
+  "/pdf-tools/protect-pdf",
+  "/pdf-tools/sign-pdf",
+];
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
@@ -78,6 +97,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const generatorEntries: MetadataRoute.Sitemap = allGeneratorRoutes.map(
+    (route) => ({
+      url: `${BASE_URL}${route}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: highPriorityRoutes.includes(route) ? 0.9 : 0.8,
+    })
+  );
+
+  const pdfToolEntries: MetadataRoute.Sitemap = allPdfToolRoutes.map(
     (route) => ({
       url: `${BASE_URL}${route}`,
       lastModified: now,
@@ -107,5 +135,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  return [...homepage, ...generatorEntries, ...otherPages];
+  return [...homepage, ...generatorEntries, ...pdfToolEntries, ...otherPages];
 }
