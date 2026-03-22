@@ -29,7 +29,7 @@ export default function MergePdfClient() {
 
       const pdfBytes = await merged.save();
       const blob = new Blob([pdfBytes as BlobPart], { type: "application/pdf" });
-      tool.setResult(blob, "merged.pdf");
+      tool.setResult(blob, `merged-${new Date().toISOString().slice(0, 10)}.pdf`);
     } catch (err) {
       tool.setProcessingError(
         err instanceof Error ? err.message : "Failed to merge PDFs"
@@ -134,6 +134,7 @@ export default function MergePdfClient() {
                 <button
                   onClick={() => tool.removeFile(index)}
                   className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors shrink-0"
+                  aria-label="Remove file"
                 >
                   <X className="w-4 h-4" />
                 </button>

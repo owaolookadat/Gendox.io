@@ -87,7 +87,7 @@ export default function AddPageNumbersClient() {
 
       const pdfBytes = await pdf.save();
       const blob = new Blob([pdfBytes as BlobPart], { type: "application/pdf" });
-      tool.setResult(blob, "numbered.pdf");
+      tool.setResult(blob, `numbered-${new Date().toISOString().slice(0, 10)}.pdf`);
     } catch (err) {
       tool.setProcessingError(
         err instanceof Error ? err.message : "Failed to add page numbers"

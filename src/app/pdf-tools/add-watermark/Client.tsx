@@ -81,7 +81,7 @@ export default function AddWatermarkClient() {
 
       const pdfBytes = await pdf.save();
       const blob = new Blob([pdfBytes as BlobPart], { type: "application/pdf" });
-      tool.setResult(blob, "watermarked.pdf");
+      tool.setResult(blob, `watermarked-${new Date().toISOString().slice(0, 10)}.pdf`);
     } catch (err) {
       tool.setProcessingError(
         err instanceof Error ? err.message : "Failed to add watermark"

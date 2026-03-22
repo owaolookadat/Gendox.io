@@ -64,7 +64,7 @@ export default function OrganizePdfClient() {
 
       const pdfBytes = await result.save();
       const blob = new Blob([pdfBytes as BlobPart], { type: "application/pdf" });
-      tool.setResult(blob, "organized.pdf");
+      tool.setResult(blob, `organized-${new Date().toISOString().slice(0, 10)}.pdf`);
     } catch (err) {
       tool.setProcessingError(
         err instanceof Error ? err.message : "Failed to organize PDF"

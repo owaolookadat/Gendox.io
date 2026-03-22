@@ -48,7 +48,7 @@ export default function ProtectPdfClient() {
         ownerPassword: password,
       }) as Uint8Array;
       const blob = new Blob([pdfBytes as BlobPart], { type: "application/pdf" });
-      tool.setResult(blob, "protected.pdf");
+      tool.setResult(blob, `protected-${new Date().toISOString().slice(0, 10)}.pdf`);
     } catch (err) {
       tool.setProcessingError(
         err instanceof Error ? err.message : "Failed to protect PDF"

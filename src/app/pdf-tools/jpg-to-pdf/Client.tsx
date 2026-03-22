@@ -133,7 +133,7 @@ export default function JpgToPdfClient() {
 
       const pdfBytes = await doc.save();
       const blob = new Blob([pdfBytes as BlobPart], { type: "application/pdf" });
-      tool.setResult(blob, "images.pdf");
+      tool.setResult(blob, `images-${new Date().toISOString().slice(0, 10)}.pdf`);
     } catch (err) {
       tool.setProcessingError(
         err instanceof Error ? err.message : "Failed to convert images"
@@ -242,6 +242,7 @@ export default function JpgToPdfClient() {
                     <button
                       onClick={() => handleRemoveFile(index)}
                       className="absolute top-1 right-1 p-0.5 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      aria-label="Remove file"
                     >
                       <X className="w-3 h-3 text-white" />
                     </button>

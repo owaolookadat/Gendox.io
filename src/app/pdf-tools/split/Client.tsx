@@ -94,7 +94,7 @@ export default function SplitPdfClient() {
 
       const pdfBytes = await result.save();
       const blob = new Blob([pdfBytes as BlobPart], { type: "application/pdf" });
-      tool.setResult(blob, "split.pdf");
+      tool.setResult(blob, `split-${new Date().toISOString().slice(0, 10)}.pdf`);
     } catch (err) {
       tool.setProcessingError(
         err instanceof Error ? err.message : "Failed to split PDF"

@@ -107,6 +107,8 @@ export default function PdfUploadZone({
   return (
     <div className="w-full">
       <div
+        role="button"
+        aria-label={label}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -128,6 +130,7 @@ export default function PdfUploadZone({
           multiple={multiple}
           onChange={handleChange}
           className="hidden"
+          aria-label="Upload file"
         />
 
         <div

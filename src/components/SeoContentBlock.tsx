@@ -50,7 +50,7 @@ export default function SeoContentBlock({ heading, content, faqs, relatedTools }
             {relatedTools.map((tool) => (
               <Link
                 key={tool.slug}
-                href={`/generators/${tool.slug}`}
+                href={tool.slug.startsWith("/") ? tool.slug : `/generators/${tool.slug}`}
                 className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md hover:border-blue-300 transition-all"
               >
                 <h3 className="font-semibold text-gray-900 text-sm mb-1">{tool.title}</h3>

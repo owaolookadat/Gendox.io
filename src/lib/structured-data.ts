@@ -1,17 +1,21 @@
 export function getToolJsonLd(
   slug: string,
   title: string,
-  description: string
+  description: string,
+  path?: string
 ): Record<string, unknown> {
   // Strip "| gendox" suffix from the title
-  const cleanTitle = title.replace(/\s*\|\s*gendox\s*$/, "");
+  const cleanTitle = title.replace(/\s*[|—]\s*.*$/, "");
+  const url = path
+    ? `https://gendox.io${path}`
+    : `https://gendox.io/generators/${slug}`;
 
   return {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: cleanTitle,
     description,
-    url: `https://gendox.io/generators/${slug}`,
+    url,
     applicationCategory: "BusinessApplication",
     operatingSystem: "Any",
     offers: {

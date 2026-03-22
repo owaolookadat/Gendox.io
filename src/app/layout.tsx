@@ -3,6 +3,7 @@ import "./globals.css";
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
+import MobileNav from "@/components/MobileNav";
 import { getHomePageJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
@@ -57,10 +58,11 @@ export default function RootLayout({
               </Link>
               <Link
                 href="/"
-                className="text-sm font-medium text-white bg-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors"
+                className="text-sm font-medium text-white bg-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors hidden sm:inline-block"
               >
                 All Tools
               </Link>
+              <MobileNav />
             </div>
           </div>
         </nav>
