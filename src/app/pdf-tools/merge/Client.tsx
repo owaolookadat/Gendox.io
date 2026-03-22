@@ -7,9 +7,12 @@ import PdfDownloadResult from "@/components/pdf/PdfDownloadResult";
 import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { formatFileSize } from "@/lib/pdf/pdf-utils";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import { GripVertical, X, Plus, FileText } from "lucide-react";
 
 export default function MergePdfClient() {
+  const seo = getToolSeoContent("merge");
+  const relatedTools = getRelatedTools("merge");
   const tool = usePdfTool();
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -63,6 +66,10 @@ export default function MergePdfClient() {
     <PdfToolShell
       title="Merge PDF"
       description="Combine multiple PDF files into a single document. Drag to reorder."
+      seoHeading={seo.heading}
+      seoContent={seo.content}
+      faqs={seo.faqs}
+      relatedTools={relatedTools}
     >
       {/* Step 1: Upload */}
       {tool.isUpload && (

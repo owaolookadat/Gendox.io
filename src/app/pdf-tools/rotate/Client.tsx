@@ -8,9 +8,12 @@ import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import PdfPageThumbnail from "@/components/pdf/PdfPageThumbnail";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getPdfPageCount } from "@/lib/pdf/pdf-utils";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import { RotateCcw, RotateCw } from "lucide-react";
 
 export default function RotatePdfClient() {
+  const seo = getToolSeoContent("rotate");
+  const relatedTools = getRelatedTools("rotate");
   const tool = usePdfTool();
   const [pageCount, setPageCount] = useState(0);
   const [rotations, setRotations] = useState<Record<number, number>>({});
@@ -91,6 +94,10 @@ export default function RotatePdfClient() {
     <PdfToolShell
       title="Rotate PDF"
       description="Rotate PDF pages individually or all at once. Click the arrows to rotate."
+      seoHeading={seo.heading}
+      seoContent={seo.content}
+      faqs={seo.faqs}
+      relatedTools={relatedTools}
     >
       {tool.isUpload && (
         <PdfUploadZone

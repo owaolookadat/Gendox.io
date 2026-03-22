@@ -7,6 +7,7 @@ import PdfDownloadResult from "@/components/pdf/PdfDownloadResult";
 import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getPdfPageCount } from "@/lib/pdf/pdf-utils";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 
 type WatermarkMode = "text" | "image";
 type Position = "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
@@ -24,6 +25,8 @@ const POSITIONS: { value: Position; label: string }[] = [
 ];
 
 export default function AddWatermarkClient() {
+  const seo = getToolSeoContent("add-watermark");
+  const relatedTools = getRelatedTools("add-watermark");
   const tool = usePdfTool();
   const [pageCount, setPageCount] = useState(0);
   const [mode, setMode] = useState<WatermarkMode>("text");
@@ -94,6 +97,10 @@ export default function AddWatermarkClient() {
     <PdfToolShell
       title="Add Watermark"
       description="Stamp a text watermark across all pages of your PDF."
+      seoHeading={seo.heading}
+      seoContent={seo.content}
+      faqs={seo.faqs}
+      relatedTools={relatedTools}
     >
       {tool.isUpload && (
         <PdfUploadZone

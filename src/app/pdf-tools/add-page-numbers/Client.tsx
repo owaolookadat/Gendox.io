@@ -7,6 +7,7 @@ import PdfDownloadResult from "@/components/pdf/PdfDownloadResult";
 import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getPdfPageCount } from "@/lib/pdf/pdf-utils";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 
 type Position = "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right";
 type NumberFormat = "number" | "pageN" | "pageNofM" | "custom";
@@ -21,6 +22,8 @@ const POSITIONS: { value: Position; label: string; row: number; col: number }[] 
 ];
 
 export default function AddPageNumbersClient() {
+  const seo = getToolSeoContent("add-page-numbers");
+  const relatedTools = getRelatedTools("add-page-numbers");
   const tool = usePdfTool();
   const [pageCount, setPageCount] = useState(0);
   const [position, setPosition] = useState<Position>("bottom-center");
@@ -100,6 +103,10 @@ export default function AddPageNumbersClient() {
     <PdfToolShell
       title="Add Page Numbers"
       description="Add page numbers to your PDF with customizable position, format, and size."
+      seoHeading={seo.heading}
+      seoContent={seo.content}
+      faqs={seo.faqs}
+      relatedTools={relatedTools}
     >
       {tool.isUpload && (
         <PdfUploadZone

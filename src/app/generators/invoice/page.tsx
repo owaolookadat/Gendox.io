@@ -43,7 +43,7 @@ const emptyItem = (): LineItem => ({
 });
 
 function RequiredMark() {
-  return <span className="text-red-500 ml-0.5">*</span>;
+  return <span className="text-red-500 ml-0.5" aria-label="required">*</span>;
 }
 
 export default function InvoicePage() {

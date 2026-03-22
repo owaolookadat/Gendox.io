@@ -7,12 +7,15 @@ import PdfDownloadResult from "@/components/pdf/PdfDownloadResult";
 import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getPdfPageCount } from "@/lib/pdf/pdf-utils";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import { Eraser, Type, Pen } from "lucide-react";
 
 type SignMode = "draw" | "type";
 type SignStep = "create" | "place";
 
 export default function SignPdfClient() {
+  const seo = getToolSeoContent("sign-pdf");
+  const relatedTools = getRelatedTools("sign-pdf");
   const tool = usePdfTool();
   const [pageCount, setPageCount] = useState(0);
   const [step, setStep] = useState<SignStep>("create");
@@ -168,6 +171,10 @@ export default function SignPdfClient() {
     <PdfToolShell
       title="Sign PDF"
       description="Draw or type your signature and place it on your PDF document."
+      seoHeading={seo.heading}
+      seoContent={seo.content}
+      faqs={seo.faqs}
+      relatedTools={relatedTools}
     >
       {tool.isUpload && (
         <PdfUploadZone

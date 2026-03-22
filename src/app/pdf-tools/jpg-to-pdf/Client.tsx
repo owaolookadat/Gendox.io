@@ -6,6 +6,7 @@ import PdfUploadZone from "@/components/pdf/PdfUploadZone";
 import PdfDownloadResult from "@/components/pdf/PdfDownloadResult";
 import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import { usePdfTool } from "@/hooks/usePdfTool";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import { GripVertical, X, Plus } from "lucide-react";
 
 type PageOrientation = "portrait" | "landscape";
@@ -24,6 +25,8 @@ const MARGINS = {
 };
 
 export default function JpgToPdfClient() {
+  const seo = getToolSeoContent("jpg-to-pdf");
+  const relatedTools = getRelatedTools("jpg-to-pdf");
   const tool = usePdfTool();
   const [orientation, setOrientation] = useState<PageOrientation>("portrait");
   const [pageSize, setPageSize] = useState<PageSize>("fit");
@@ -168,6 +171,10 @@ export default function JpgToPdfClient() {
     <PdfToolShell
       title="JPG to PDF"
       description="Convert JPG and PNG images to a PDF document. Drag to reorder pages."
+      seoHeading={seo.heading}
+      seoContent={seo.content}
+      faqs={seo.faqs}
+      relatedTools={relatedTools}
     >
       {/* Step 1: Upload */}
       {tool.isUpload && (

@@ -1188,6 +1188,310 @@ const seoData: Record<string, SeoContent> = {
       },
     ],
   },
+
+  merge: {
+    heading: "How to Merge PDF Files Online for Free",
+    content:
+      "Merging PDF files combines multiple documents into a single PDF, making it easier to organise, share, and archive related content. Whether you are compiling reports, combining scanned pages, or assembling a portfolio, our free online PDF merger handles the task directly in your browser with no uploads to external servers. Simply drag and drop your files, reorder them as needed, and download the merged result instantly. No software installation or account creation is required.",
+    faqs: [
+      {
+        question: "Is there a limit to how many PDFs I can merge?",
+        answer:
+          "Our tool allows you to merge multiple PDF files in a single session. Since all processing happens in your browser, performance depends on your device's memory. For best results, keep the total file size under 100 MB.",
+      },
+      {
+        question: "Will merging PDFs reduce the quality of my documents?",
+        answer:
+          "No. Merging PDFs does not re-compress or alter the content of your files. Text, images, and formatting remain exactly as they were in the original documents.",
+      },
+      {
+        question: "Can I rearrange the order of PDFs before merging?",
+        answer:
+          "Yes. After adding your files, you can drag and drop them into any order before merging. The final merged PDF will follow the sequence you set.",
+      },
+    ],
+  },
+
+  split: {
+    heading: "How to Split a PDF into Separate Files Online",
+    content:
+      "Splitting a PDF allows you to extract specific pages or divide a large document into smaller, more manageable files. This is useful when you need to share only part of a report, separate chapters of a book, or isolate individual forms from a multi-page scan. Our free PDF splitter works entirely in your browser, keeping your documents private and secure. Choose which pages to extract, and download the result in seconds.",
+    faqs: [
+      {
+        question: "Can I split a PDF into individual pages?",
+        answer:
+          "Yes. You can split a PDF into individual single-page files or select specific page ranges to extract. The tool gives you full control over which pages end up in each output file.",
+      },
+      {
+        question: "Does splitting a PDF affect the original file?",
+        answer:
+          "No. The original PDF remains unchanged. Splitting creates new files from the pages you select without modifying the source document.",
+      },
+      {
+        question: "Can I split a password-protected PDF?",
+        answer:
+          "You will need to unlock the PDF first before splitting it. If the PDF has a user password, enter it when prompted. Owner-password restrictions on editing do not prevent splitting in most cases.",
+      },
+    ],
+  },
+
+  rotate: {
+    heading: "How to Rotate PDF Pages Online for Free",
+    content:
+      "Rotating PDF pages corrects the orientation of scanned documents, sideways photos, or pages that were saved in the wrong direction. Our free online PDF rotator lets you rotate individual pages or all pages at once by 90, 180, or 270 degrees. Everything runs in your browser so your files stay private. Fix page orientation issues in a few clicks and download the corrected PDF immediately.",
+    faqs: [
+      {
+        question: "Can I rotate just one page in a multi-page PDF?",
+        answer:
+          "Yes. You can select individual pages to rotate while leaving the rest of the document unchanged. This is useful when only certain scanned pages are oriented incorrectly.",
+      },
+      {
+        question: "What rotation angles are available?",
+        answer:
+          "You can rotate pages by 90 degrees clockwise, 90 degrees counter-clockwise, or 180 degrees. Apply different rotations to different pages within the same document.",
+      },
+      {
+        question: "Does rotating a PDF change the file size?",
+        answer:
+          "Rotating pages has a negligible effect on file size. The content remains the same; only the page orientation metadata is updated.",
+      },
+    ],
+  },
+
+  "remove-pages": {
+    heading: "How to Remove Pages from a PDF Online",
+    content:
+      "Removing pages from a PDF lets you delete unwanted content such as blank pages, cover sheets, or irrelevant sections before sharing or archiving a document. Our free online tool makes it simple to select and remove specific pages from any PDF file directly in your browser. Preview each page, choose which ones to delete, and download the cleaned-up document instantly. No software to install and no files uploaded to external servers.",
+    faqs: [
+      {
+        question: "Can I remove multiple pages at once?",
+        answer:
+          "Yes. You can select multiple pages to remove in a single operation. Use the page previews to identify and mark all the pages you want to delete before processing.",
+      },
+      {
+        question: "Can I undo page removal after downloading?",
+        answer:
+          "The original file is not modified, so you always have your source document. If you remove the wrong pages, simply start again with the original PDF.",
+      },
+      {
+        question: "Will removing pages break bookmarks or links in my PDF?",
+        answer:
+          "Internal links and bookmarks that point to removed pages will no longer work. Links pointing to remaining pages will continue to function normally.",
+      },
+    ],
+  },
+
+  "extract-pages": {
+    heading: "How to Extract Pages from a PDF Online for Free",
+    content:
+      "Extracting pages from a PDF creates a new document containing only the pages you need. Unlike splitting, which divides the entire document, extraction lets you cherry-pick specific pages or page ranges from anywhere in the file. This is ideal for pulling out key sections of a contract, saving specific pages of a manual, or creating a summary document from a longer report. Our browser-based tool keeps your files secure and delivers results instantly.",
+    faqs: [
+      {
+        question: "What is the difference between extracting and splitting a PDF?",
+        answer:
+          "Extracting lets you select specific non-contiguous pages from a PDF into a new file. Splitting divides a document into sequential parts. Use extraction when you need scattered pages and splitting when you want to break a document into ordered sections.",
+      },
+      {
+        question: "Can I extract pages from a scanned PDF?",
+        answer:
+          "Yes. Page extraction works on all PDF types including scanned documents, text-based PDFs, and PDFs with mixed content. The tool operates on page structure, not content type.",
+      },
+      {
+        question: "Does extracting pages reduce file size?",
+        answer:
+          "Yes. The extracted PDF will generally be smaller since it contains fewer pages. However, shared resources like fonts may still be included in the new file.",
+      },
+    ],
+  },
+
+  organize: {
+    heading: "How to Organize and Reorder PDF Pages Online",
+    content:
+      "Organising PDF pages lets you rearrange the page order of any document by dragging and dropping page thumbnails into your preferred sequence. This is useful for reordering presentation slides, rearranging report sections, or fixing the page order after scanning. Our free online PDF organiser provides visual page previews so you can see exactly what you are moving. All processing happens locally in your browser for complete privacy.",
+    faqs: [
+      {
+        question: "Can I move pages between different positions in a large PDF?",
+        answer:
+          "Yes. The visual drag-and-drop interface lets you move any page to any position regardless of document length. Page thumbnails help you identify content quickly.",
+      },
+      {
+        question: "Does reorganising pages affect the PDF content?",
+        answer:
+          "No. The content of each page remains identical. Only the page order changes. Text, images, annotations, and formatting are all preserved exactly as they are.",
+      },
+      {
+        question: "Can I reverse the page order of my entire PDF?",
+        answer:
+          "Yes. You can rearrange pages into any order, including reversing the entire document. This is useful for fixing documents that were scanned in the wrong order.",
+      },
+    ],
+  },
+
+  "jpg-to-pdf": {
+    heading: "How to Convert JPG Images to PDF Online for Free",
+    content:
+      "Converting JPG images to PDF creates a professional, shareable document from your photos, scans, or graphics. PDFs preserve image quality while offering a standardised format that looks the same on every device. Our free online converter lets you combine multiple images into a single PDF, adjust page sizing, and download the result instantly. Everything runs in your browser so your images remain private and are never uploaded to external servers.",
+    faqs: [
+      {
+        question: "Can I convert multiple JPGs into one PDF?",
+        answer:
+          "Yes. You can add multiple JPG images and combine them into a single multi-page PDF document. Rearrange the image order before conversion to control the page sequence.",
+      },
+      {
+        question: "Will converting JPG to PDF reduce image quality?",
+        answer:
+          "No. The conversion embeds your JPG images into the PDF at their original resolution and quality. There is no additional compression applied during the conversion process.",
+      },
+      {
+        question: "What image formats are supported besides JPG?",
+        answer:
+          "While this tool is optimised for JPG and JPEG files, most common image formats including PNG can be handled. For best results with photographs, JPG is the recommended format.",
+      },
+    ],
+  },
+
+  "pdf-to-jpg": {
+    heading: "How to Convert PDF to JPG Images Online for Free",
+    content:
+      "Converting a PDF to JPG images turns each page of your document into a separate image file. This is useful for creating thumbnails, sharing individual pages on social media, embedding pages in presentations, or working with content in image editors. Our free online converter processes your PDF entirely in your browser, ensuring your documents stay private. Select your preferred image quality and download the results as individual JPG files.",
+    faqs: [
+      {
+        question: "What resolution will the JPG images be?",
+        answer:
+          "The output resolution depends on the quality setting you choose. Higher quality settings produce larger, more detailed images suitable for printing, while standard settings create smaller files ideal for screen viewing and web use.",
+      },
+      {
+        question: "Can I convert a specific page of a PDF to JPG?",
+        answer:
+          "Yes. You can select individual pages or page ranges to convert rather than processing the entire document. This saves time when you only need images of certain pages.",
+      },
+      {
+        question: "Are the converted JPG files suitable for printing?",
+        answer:
+          "Yes, when using the high-quality setting. For professional printing, choose the highest quality option to preserve detail and sharpness. For web or email use, standard quality is typically sufficient.",
+      },
+    ],
+  },
+
+  "add-page-numbers": {
+    heading: "How to Add Page Numbers to a PDF Online for Free",
+    content:
+      "Adding page numbers to a PDF makes your document easier to navigate, reference, and print. Whether you are preparing a report, thesis, manual, or legal document, numbered pages help readers find content quickly and keep printed pages in order. Our free online tool lets you customise the position, format, and starting number of your page numbers. All processing happens in your browser so your documents remain private and secure.",
+    faqs: [
+      {
+        question: "Can I choose where page numbers appear on the page?",
+        answer:
+          "Yes. You can place page numbers at the top or bottom of the page, aligned to the left, centre, or right. Choose the position that best suits your document's layout and style.",
+      },
+      {
+        question: "Can I start numbering from a page other than the first?",
+        answer:
+          "Yes. You can set a custom starting page number and choose which page to begin numbering from. This is useful when your document has a cover page or table of contents that should not be numbered.",
+      },
+      {
+        question: "What number formats are available?",
+        answer:
+          "Common formats include Arabic numerals (1, 2, 3), Roman numerals (i, ii, iii), and options with prefixes such as 'Page 1 of N'. Select the format that matches your document's requirements.",
+      },
+    ],
+  },
+
+  "add-watermark": {
+    heading: "How to Add a Watermark to a PDF Online for Free",
+    content:
+      "Adding a watermark to a PDF helps protect your documents by marking them as confidential, draft, or proprietary. Watermarks are semi-transparent text or images overlaid on each page, discouraging unauthorised use while keeping the content readable. Our free online tool lets you add custom text watermarks with control over font size, colour, opacity, and rotation. Process your documents entirely in your browser for complete privacy and security.",
+    faqs: [
+      {
+        question: "Can I customise the watermark text and appearance?",
+        answer:
+          "Yes. You can set custom text, adjust the font size, choose the colour and opacity, and control the rotation angle. This lets you create anything from subtle background marks to prominent overlay text.",
+      },
+      {
+        question: "Will the watermark cover the document content?",
+        answer:
+          "Watermarks are semi-transparent by design so the underlying text and images remain readable. You can adjust the opacity to find the right balance between visibility of the watermark and readability of the content.",
+      },
+      {
+        question: "Can I remove a watermark after adding it?",
+        answer:
+          "The watermark is permanently applied to the downloaded PDF. Keep your original un-watermarked file if you may need a clean version later. You can always re-process the original with different watermark settings.",
+      },
+    ],
+  },
+
+  "protect-pdf": {
+    heading: "How to Password Protect a PDF Online for Free",
+    content:
+      "Password protecting a PDF adds encryption to prevent unauthorised access to your sensitive documents. Whether you are sharing financial records, legal contracts, or personal information, adding a password ensures only intended recipients can open and read the file. Our free online tool applies industry-standard encryption to your PDF directly in your browser, so your documents are never uploaded to external servers. Set a password and download the protected file in seconds.",
+    faqs: [
+      {
+        question: "How secure is the PDF password protection?",
+        answer:
+          "Our tool applies standard PDF encryption which is widely supported by all PDF readers. The security level depends on the strength of your chosen password. Use a strong, unique password with a mix of letters, numbers, and symbols for best protection.",
+      },
+      {
+        question: "Can I remove the password from a protected PDF later?",
+        answer:
+          "Yes, if you know the password. Open the protected PDF with the correct password, then save it without protection. Without the password, the encryption cannot be removed.",
+      },
+      {
+        question: "Will the recipient need special software to open a protected PDF?",
+        answer:
+          "No. Any standard PDF reader including Adobe Acrobat, Preview on Mac, and most browser-based viewers can open password-protected PDFs. The recipient simply enters the password when prompted.",
+      },
+    ],
+  },
+
+  "sign-pdf": {
+    heading: "How to Add a Signature to a PDF Online for Free",
+    content:
+      "Adding a signature to a PDF lets you sign documents electronically without printing, signing by hand, and scanning. This is useful for contracts, agreements, forms, and any document that requires your signature. Our free online tool lets you draw, type, or upload your signature and place it anywhere on the PDF. All processing happens locally in your browser, ensuring your documents and signature remain completely private.",
+    faqs: [
+      {
+        question: "Is an electronic signature legally valid?",
+        answer:
+          "In many jurisdictions, electronic signatures are legally recognised and enforceable under laws such as the ESIGN Act in the US and eIDAS in the EU. However, some documents such as wills or certain real estate transactions may still require wet ink signatures. Check local requirements for your specific use case.",
+      },
+      {
+        question: "Can I add multiple signatures to a PDF?",
+        answer:
+          "Yes. You can place multiple signatures on the same document, which is useful when a form requires signatures in several locations or when multiple people need to sign the same document.",
+      },
+      {
+        question: "How can I create my signature?",
+        answer:
+          "You can draw your signature using your mouse or touchscreen, type your name and select a signature style font, or upload an image of your handwritten signature. All three methods produce a clean signature that can be placed on your PDF.",
+      },
+    ],
+  },
+
+  "profit-margin": {
+    heading: "How to Calculate Profit Margin for Your Business",
+    content:
+      "Profit margin measures how much of your revenue turns into profit after costs are deducted, expressed as a percentage. It is one of the most important financial metrics for any business, helping you understand pricing effectiveness, cost management, and overall financial health. Our free profit margin calculator instantly computes gross margin, net margin, and markup percentage from your revenue and cost figures. Use it to evaluate product pricing, compare business performance, or prepare financial projections.",
+    faqs: [
+      {
+        question: "What is the difference between gross and net profit margin?",
+        answer:
+          "Gross profit margin considers only the cost of goods sold, showing how efficiently you produce or source products. Net profit margin also deducts operating expenses like rent, salaries, and utilities, giving a fuller picture of overall profitability.",
+      },
+      {
+        question: "What is a good profit margin?",
+        answer:
+          "Good margins vary by industry. Retail businesses often operate on 2 to 5 percent net margins, while software companies may achieve 20 percent or more. Compare your margins to industry benchmarks rather than using a universal standard.",
+      },
+      {
+        question: "What is the difference between margin and markup?",
+        answer:
+          "Margin is profit as a percentage of revenue (selling price), while markup is profit as a percentage of cost. A product bought for 50 and sold for 100 has a 50 percent margin but a 100 percent markup. Both metrics are useful for different pricing decisions.",
+      },
+      {
+        question: "How can I improve my profit margin?",
+        answer:
+          "You can improve margins by increasing prices, reducing cost of goods through better supplier negotiations, lowering operating expenses, or focusing on higher-margin products and services. Regularly reviewing your margins helps identify trends early.",
+      },
+    ],
+  },
 };
 
 const relatedToolsMap: Record<string, RelatedTool[]> = {
@@ -1445,6 +1749,71 @@ const relatedToolsMap: Record<string, RelatedTool[]> = {
     { title: "Certificate of Completion", slug: "certificate-of-completion", desc: "Issue a completion certificate" },
     { title: "Performance Review Generator", slug: "performance-review", desc: "Create a performance review" },
     { title: "Internship Certificate Generator", slug: "internship-certificate", desc: "Generate an internship certificate" },
+  ],
+  merge: [
+    { title: "Split PDF", slug: "/pdf-tools/split", desc: "Split a PDF into separate files" },
+    { title: "Organize PDF", slug: "/pdf-tools/organize", desc: "Rearrange pages in your PDF" },
+    { title: "Remove Pages", slug: "/pdf-tools/remove-pages", desc: "Delete unwanted pages from a PDF" },
+  ],
+  split: [
+    { title: "Merge PDF", slug: "/pdf-tools/merge", desc: "Combine multiple PDFs into one" },
+    { title: "Extract Pages", slug: "/pdf-tools/extract-pages", desc: "Extract specific pages from a PDF" },
+    { title: "Remove Pages", slug: "/pdf-tools/remove-pages", desc: "Delete unwanted pages from a PDF" },
+  ],
+  rotate: [
+    { title: "Organize PDF", slug: "/pdf-tools/organize", desc: "Rearrange and reorder PDF pages" },
+    { title: "Add Page Numbers", slug: "/pdf-tools/add-page-numbers", desc: "Add page numbers to your PDF" },
+    { title: "Merge PDF", slug: "/pdf-tools/merge", desc: "Combine multiple PDFs into one" },
+  ],
+  "remove-pages": [
+    { title: "Extract Pages", slug: "/pdf-tools/extract-pages", desc: "Extract specific pages into a new PDF" },
+    { title: "Split PDF", slug: "/pdf-tools/split", desc: "Split a PDF into separate files" },
+    { title: "Organize PDF", slug: "/pdf-tools/organize", desc: "Rearrange pages in your PDF" },
+  ],
+  "extract-pages": [
+    { title: "Split PDF", slug: "/pdf-tools/split", desc: "Split a PDF into sequential parts" },
+    { title: "Remove Pages", slug: "/pdf-tools/remove-pages", desc: "Delete pages from a PDF" },
+    { title: "Merge PDF", slug: "/pdf-tools/merge", desc: "Combine extracted pages with other PDFs" },
+  ],
+  organize: [
+    { title: "Merge PDF", slug: "/pdf-tools/merge", desc: "Combine multiple PDFs into one" },
+    { title: "Rotate PDF", slug: "/pdf-tools/rotate", desc: "Fix page orientation in your PDF" },
+    { title: "Remove Pages", slug: "/pdf-tools/remove-pages", desc: "Delete unwanted pages from a PDF" },
+  ],
+  "jpg-to-pdf": [
+    { title: "PDF to JPG", slug: "/pdf-tools/pdf-to-jpg", desc: "Convert PDF pages back to JPG images" },
+    { title: "Merge PDF", slug: "/pdf-tools/merge", desc: "Combine multiple PDFs into one" },
+    { title: "Add Page Numbers", slug: "/pdf-tools/add-page-numbers", desc: "Add page numbers to your PDF" },
+  ],
+  "pdf-to-jpg": [
+    { title: "JPG to PDF", slug: "/pdf-tools/jpg-to-pdf", desc: "Convert JPG images to PDF" },
+    { title: "Extract Pages", slug: "/pdf-tools/extract-pages", desc: "Extract specific pages from a PDF" },
+    { title: "Split PDF", slug: "/pdf-tools/split", desc: "Split a PDF into separate files" },
+  ],
+  "add-page-numbers": [
+    { title: "Add Watermark", slug: "/pdf-tools/add-watermark", desc: "Add a watermark to your PDF" },
+    { title: "Organize PDF", slug: "/pdf-tools/organize", desc: "Rearrange pages before numbering" },
+    { title: "Merge PDF", slug: "/pdf-tools/merge", desc: "Combine PDFs then add page numbers" },
+  ],
+  "add-watermark": [
+    { title: "Protect PDF", slug: "/pdf-tools/protect-pdf", desc: "Password protect your PDF" },
+    { title: "Add Page Numbers", slug: "/pdf-tools/add-page-numbers", desc: "Add page numbers to your PDF" },
+    { title: "Sign PDF", slug: "/pdf-tools/sign-pdf", desc: "Add a signature to your PDF" },
+  ],
+  "protect-pdf": [
+    { title: "Add Watermark", slug: "/pdf-tools/add-watermark", desc: "Add a watermark for extra protection" },
+    { title: "Sign PDF", slug: "/pdf-tools/sign-pdf", desc: "Add a signature to your PDF" },
+    { title: "Merge PDF", slug: "/pdf-tools/merge", desc: "Combine PDFs before protecting" },
+  ],
+  "sign-pdf": [
+    { title: "Protect PDF", slug: "/pdf-tools/protect-pdf", desc: "Password protect your signed PDF" },
+    { title: "Add Watermark", slug: "/pdf-tools/add-watermark", desc: "Add a watermark to your PDF" },
+    { title: "Merge PDF", slug: "/pdf-tools/merge", desc: "Combine signed documents" },
+  ],
+  "profit-margin": [
+    { title: "Invoice Generator", slug: "invoice", desc: "Create a professional invoice" },
+    { title: "Quotation Generator", slug: "quotation", desc: "Send a price quotation to clients" },
+    { title: "Receipt Generator", slug: "receipt", desc: "Generate a payment receipt" },
   ],
 };
 

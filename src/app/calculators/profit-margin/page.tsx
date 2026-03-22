@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
-import { ShieldCheck, Zap, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { ShieldCheck, Zap, TrendingUp, TrendingDown, Minus, Copy, Check } from "lucide-react";
 
 function formatCurrency(value: number): string {
   return value.toLocaleString("en-GB", {
@@ -75,6 +75,22 @@ export default function ProfitMarginCalculator() {
 
   const grossColor = getMarginHealth(results.grossMargin);
   const netColor = getMarginHealth(results.netMargin);
+  const [copied, setCopied] = useState(false);
+
+  const copyResults = useCallback(() => {
+    if (!results.hasInput) return;
+    const text = [
+      `Gross Profit: ${currency}${formatCurrency(results.grossProfit)}`,
+      `Gross Margin: ${formatPercent(results.grossMargin)}`,
+      `Net Profit: ${currency}${formatCurrency(results.netProfit)}`,
+      `Net Margin: ${formatPercent(results.netMargin)}`,
+      `Markup: ${formatPercent(results.markup)}`,
+    ].join("\n");
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, [results, currency]);
 
   const labelClass = "block text-sm font-medium text-gray-700 mb-1";
   const inputClass =
@@ -246,6 +262,17 @@ export default function ProfitMarginCalculator() {
           </div>
         </div>
       </div>
+
+      {/* Copy results */}
+      {results.hasInput && (
+        <button
+          onClick={copyResults}
+          className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+          {copied ? "Copied to clipboard!" : "Copy results"}
+        </button>
+      )}
 
       {/* Formulas reference */}
       <div className="mt-8 bg-white rounded-xl border border-gray-200 p-6 shadow-sm">

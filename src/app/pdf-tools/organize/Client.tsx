@@ -8,8 +8,11 @@ import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import PdfPageThumbnail from "@/components/pdf/PdfPageThumbnail";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getPdfPageCount } from "@/lib/pdf/pdf-utils";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 
 export default function OrganizePdfClient() {
+  const seo = getToolSeoContent("organize");
+  const relatedTools = getRelatedTools("organize");
   const tool = usePdfTool();
   const [pageCount, setPageCount] = useState(0);
   const [pageOrder, setPageOrder] = useState<number[]>([]);
@@ -76,6 +79,10 @@ export default function OrganizePdfClient() {
     <PdfToolShell
       title="Organize PDF"
       description="Drag and drop to reorder pages in your PDF document."
+      seoHeading={seo.heading}
+      seoContent={seo.content}
+      faqs={seo.faqs}
+      relatedTools={relatedTools}
     >
       {tool.isUpload && (
         <PdfUploadZone

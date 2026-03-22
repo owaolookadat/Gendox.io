@@ -8,9 +8,12 @@ import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import PdfPageThumbnail from "@/components/pdf/PdfPageThumbnail";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getPdfPageCount } from "@/lib/pdf/pdf-utils";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import { CheckCircle2 } from "lucide-react";
 
 export default function ExtractPagesPdfClient() {
+  const seo = getToolSeoContent("extract-pages");
+  const relatedTools = getRelatedTools("extract-pages");
   const tool = usePdfTool();
   const [pageCount, setPageCount] = useState(0);
   const [selectedPages, setSelectedPages] = useState<Set<number>>(new Set());
@@ -95,6 +98,10 @@ export default function ExtractPagesPdfClient() {
     <PdfToolShell
       title="Extract Pages"
       description="Select specific pages to extract from your PDF into a new document."
+      seoHeading={seo.heading}
+      seoContent={seo.content}
+      faqs={seo.faqs}
+      relatedTools={relatedTools}
     >
       {tool.isUpload && (
         <PdfUploadZone

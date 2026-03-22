@@ -6,9 +6,12 @@ import PdfUploadZone from "@/components/pdf/PdfUploadZone";
 import PdfDownloadResult from "@/components/pdf/PdfDownloadResult";
 import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import { usePdfTool } from "@/hooks/usePdfTool";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function ProtectPdfClient() {
+  const seo = getToolSeoContent("protect-pdf");
+  const relatedTools = getRelatedTools("protect-pdf");
   const tool = usePdfTool();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -60,6 +63,10 @@ export default function ProtectPdfClient() {
     <PdfToolShell
       title="Protect PDF"
       description="Add password protection to your PDF file to prevent unauthorized access."
+      seoHeading={seo.heading}
+      seoContent={seo.content}
+      faqs={seo.faqs}
+      relatedTools={relatedTools}
     >
       {tool.isUpload && (
         <PdfUploadZone

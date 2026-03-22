@@ -10,6 +10,19 @@ export const metadata: Metadata = {
   title: "gendox — Free Online Tools & Document Generators",
   description:
     "Free online document generators, calculators, and converters. No sign-up required. Instant download.",
+  alternates: { canonical: "https://gendox.io" },
+  openGraph: {
+    title: "gendox — Free Online Tools & Document Generators",
+    description: "Free online document generators, PDF tools, calculators, and converters. No sign-up required. Instant download.",
+    type: "website",
+    url: "https://gendox.io",
+    siteName: "gendox",
+  },
+  twitter: {
+    card: "summary",
+    title: "gendox — Free Online Tools & Document Generators",
+    description: "Free online document generators, PDF tools, calculators, and converters. No sign-up required.",
+  },
 };
 
 export default function RootLayout({

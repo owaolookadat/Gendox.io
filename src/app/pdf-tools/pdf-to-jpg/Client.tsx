@@ -7,10 +7,13 @@ import PdfDownloadResult from "@/components/pdf/PdfDownloadResult";
 import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getPdfPageCount } from "@/lib/pdf/pdf-utils";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 
 type Quality = "normal" | "high";
 
 export default function PdfToJpgClient() {
+  const seo = getToolSeoContent("pdf-to-jpg");
+  const relatedTools = getRelatedTools("pdf-to-jpg");
   const tool = usePdfTool();
   const [pageCount, setPageCount] = useState(0);
   const [quality, setQuality] = useState<Quality>("normal");
@@ -99,6 +102,10 @@ export default function PdfToJpgClient() {
     <PdfToolShell
       title="PDF to JPG"
       description="Convert each page of your PDF into a JPG image."
+      seoHeading={seo.heading}
+      seoContent={seo.content}
+      faqs={seo.faqs}
+      relatedTools={relatedTools}
     >
       {tool.isUpload && (
         <PdfUploadZone

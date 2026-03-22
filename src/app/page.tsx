@@ -326,7 +326,7 @@ export default function Home() {
         {/* Categories */}
         <div className="space-y-12">
           {filteredCategories.map((category) => (
-            <section key={category.id} id={category.id}>
+            <section key={category.id} id={category.id} className="scroll-mt-16">
               <h2 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
                 <span className={`${category.color} p-1.5 rounded-lg bg-opacity-10`}>
                   {category.icon}
@@ -378,7 +378,7 @@ export default function Home() {
                 <p className="text-sm text-gray-500 mt-1">Free Tools</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-gray-900">6</p>
+                <p className="text-3xl font-bold text-gray-900">{categories.length}</p>
                 <p className="text-sm text-gray-500 mt-1">Categories</p>
               </div>
               <div>

@@ -8,8 +8,11 @@ import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import PdfPageThumbnail from "@/components/pdf/PdfPageThumbnail";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getPdfPageCount } from "@/lib/pdf/pdf-utils";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 
 export default function RemovePagesPdfClient() {
+  const seo = getToolSeoContent("remove-pages");
+  const relatedTools = getRelatedTools("remove-pages");
   const tool = usePdfTool();
   const [pageCount, setPageCount] = useState(0);
   const [selectedPages, setSelectedPages] = useState<Set<number>>(new Set());
@@ -69,6 +72,10 @@ export default function RemovePagesPdfClient() {
     <PdfToolShell
       title="Remove Pages"
       description="Click on pages to select them for removal from your PDF."
+      seoHeading={seo.heading}
+      seoContent={seo.content}
+      faqs={seo.faqs}
+      relatedTools={relatedTools}
     >
       {tool.isUpload && (
         <PdfUploadZone

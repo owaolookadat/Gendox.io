@@ -8,11 +8,14 @@ import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import PdfPageThumbnail from "@/components/pdf/PdfPageThumbnail";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getPdfPageCount } from "@/lib/pdf/pdf-utils";
+import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
 import { CheckCircle2 } from "lucide-react";
 
 type SplitMode = "range" | "pages";
 
 export default function SplitPdfClient() {
+  const seo = getToolSeoContent("split");
+  const relatedTools = getRelatedTools("split");
   const tool = usePdfTool();
   const [pageCount, setPageCount] = useState(0);
   const [mode, setMode] = useState<SplitMode>("range");
@@ -107,6 +110,10 @@ export default function SplitPdfClient() {
     <PdfToolShell
       title="Split PDF"
       description="Extract specific pages or ranges from your PDF into a new document."
+      seoHeading={seo.heading}
+      seoContent={seo.content}
+      faqs={seo.faqs}
+      relatedTools={relatedTools}
     >
       {tool.isUpload && (
         <PdfUploadZone
