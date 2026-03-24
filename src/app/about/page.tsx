@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "About gendox — Free Online Document Generators",
   description:
     "Learn about gendox, the free online platform for generating professional documents. No sign-up, instant downloads.",
+  alternates: { canonical: "https://gendox.io/about" },
 };
 
 export default function AboutPage() {

@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy — gendox",
   description:
     "gendox privacy policy. Learn how we handle your data when you use our free document generators.",
+  alternates: { canonical: "https://gendox.io/privacy" },
 };
 
 export default function PrivacyPage() {
