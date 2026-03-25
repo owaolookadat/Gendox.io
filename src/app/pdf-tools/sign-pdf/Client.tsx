@@ -8,6 +8,7 @@ import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getPdfPageCount } from "@/lib/pdf/pdf-utils";
 import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
+import { retrieveTransferFile } from "@/lib/pdf/pdf-file-transfer";
 import { Eraser, Type, Pen } from "lucide-react";
 
 type SignMode = "draw" | "type";
@@ -166,6 +167,15 @@ export default function SignPdfClient() {
       );
     }
   }, [tool, signatureDataUrl, selectedPage, sigPosition, sigScale]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("from") === "hub") {
+      retrieveTransferFile().then((file) => {
+        if (file) tool.setFiles([file]);
+      });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <PdfToolShell

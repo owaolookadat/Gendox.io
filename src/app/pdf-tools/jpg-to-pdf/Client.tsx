@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import PdfToolShell from "@/components/pdf/PdfToolShell";
 import PdfUploadZone from "@/components/pdf/PdfUploadZone";
 import PdfDownloadResult from "@/components/pdf/PdfDownloadResult";
 import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
+import { retrieveTransferFile } from "@/lib/pdf/pdf-file-transfer";
 import { GripVertical, X, Plus } from "lucide-react";
 
 type PageOrientation = "portrait" | "landscape";
@@ -166,6 +167,15 @@ export default function JpgToPdfClient() {
     setDragIndex(null);
     setDragOverIndex(null);
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("from") === "hub") {
+      retrieveTransferFile().then((file) => {
+        if (file) tool.setFiles([file]);
+      });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <PdfToolShell

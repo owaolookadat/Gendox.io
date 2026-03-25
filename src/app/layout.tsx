@@ -58,7 +58,7 @@ export default function RootLayout({
                 About
               </Link>
               <Link
-                href="/pdf-tools/merge"
+                href="/pdf-tools"
                 className="text-sm text-gray-600 hover:text-blue-600 transition-colors hidden sm:inline"
               >
                 PDF Tools

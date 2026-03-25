@@ -49,6 +49,10 @@ const pdfToolMeta: Record<string, { title: string; description: string }> = {
     title: "Sign PDF — Add Signature to PDF Online Free | gendox",
     description: "Draw or type your signature and add it to any PDF. Free online tool, no sign-up. Your documents stay private.",
   },
+  edit: {
+    title: "Edit PDF Online Free — Fill Forms, Add Text & Annotate | gendox",
+    description: "Edit PDF files online for free. Fill forms, add text, draw annotations, and download the modified PDF. No sign-up required.",
+  },
 };
 
 export async function generateMetadata({

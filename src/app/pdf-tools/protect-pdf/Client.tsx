@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import PdfToolShell from "@/components/pdf/PdfToolShell";
 import PdfUploadZone from "@/components/pdf/PdfUploadZone";
 import PdfDownloadResult from "@/components/pdf/PdfDownloadResult";
 import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
+import { retrieveTransferFile } from "@/lib/pdf/pdf-file-transfer";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function ProtectPdfClient() {
@@ -58,6 +59,15 @@ export default function ProtectPdfClient() {
       );
     }
   }, [tool, password, canProtect]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("from") === "hub") {
+      retrieveTransferFile().then((file) => {
+        if (file) tool.setFiles([file]);
+      });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <PdfToolShell

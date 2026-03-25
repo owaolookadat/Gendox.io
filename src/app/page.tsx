@@ -73,6 +73,7 @@ const categories: Category[] = [
     cardAccent: "hover:border-red-400",
     id: "pdf-tools",
     tools: [
+      { title: "Edit PDF", slug: "edit", desc: "Fill forms, add text, draw annotations on any PDF.", keywords: "edit fill form annotate write", routePrefix: "/pdf-tools", fileType: ".pdf" },
       { title: "Merge PDF", slug: "merge", desc: "Combine multiple PDF files into one document.", keywords: "combine join merge pdf", routePrefix: "/pdf-tools", fileType: ".pdf" },
       { title: "Split PDF", slug: "split", desc: "Extract specific pages or ranges into a new PDF.", keywords: "split separate extract pages", routePrefix: "/pdf-tools", fileType: ".pdf" },
       { title: "Rotate PDF", slug: "rotate", desc: "Rotate PDF pages individually or all at once.", keywords: "rotate turn flip pages", routePrefix: "/pdf-tools", fileType: ".pdf" },

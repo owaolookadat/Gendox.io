@@ -9,6 +9,8 @@ const highPriorityRoutes = [
   "/generators/resignation-letter",
   "/generators/nda",
   "/generators/rental-agreement",
+  "/pdf-tools",
+  "/pdf-tools/edit",
   "/pdf-tools/merge",
   "/pdf-tools/split",
   "/pdf-tools/jpg-to-pdf",
@@ -70,6 +72,8 @@ const allGeneratorRoutes = [
 ];
 
 const allPdfToolRoutes = [
+  "/pdf-tools",
+  "/pdf-tools/edit",
   "/pdf-tools/merge",
   "/pdf-tools/split",
   "/pdf-tools/rotate",

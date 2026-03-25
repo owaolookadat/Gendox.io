@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import PdfToolShell from "@/components/pdf/PdfToolShell";
 import PdfUploadZone from "@/components/pdf/PdfUploadZone";
 import PdfDownloadResult from "@/components/pdf/PdfDownloadResult";
@@ -8,6 +8,7 @@ import ProcessingOverlay from "@/components/pdf/ProcessingOverlay";
 import { usePdfTool } from "@/hooks/usePdfTool";
 import { getPdfPageCount } from "@/lib/pdf/pdf-utils";
 import { getToolSeoContent, getRelatedTools } from "@/lib/seo-content";
+import { retrieveTransferFile } from "@/lib/pdf/pdf-file-transfer";
 
 type WatermarkMode = "text" | "image";
 type Position = "top-left" | "top-center" | "top-right" | "center-left" | "center" | "center-right" | "bottom-left" | "bottom-center" | "bottom-right";
@@ -92,6 +93,15 @@ export default function AddWatermarkClient() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tool, mode, text, fontSize, opacity, rotation, position]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("from") === "hub") {
+      retrieveTransferFile().then((file) => {
+        if (file) tool.setFiles([file]);
+      });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <PdfToolShell
